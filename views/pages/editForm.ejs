@@ -1,0 +1,64 @@
+<template>
+  <div id="<%- nameLc -%>-div">
+    <div v-if="<%- nameLc -%>" class="content">
+      <form id="<%- nameLc -%>-form" v-on:submit.prevent="onSubmit">
+
+        <<%- nameLc -%>-form-elemns v-bind:errors="errors" v-bind:<%- nameLc -%>="<%- nameLc -%>"></<%- nameLc -%>-form-elemns>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</template>
+
+<script>
+import Vue from 'vue'
+import axios from 'axios'
+import <%- name -%>FormElemns from './<%- name -%>FormElemns.vue'
+
+Vue.component('<%- nameLc -%>-form-elemns', <%- name -%>FormElemns)
+
+export default {
+  data() {
+    return {
+      loading: false,
+      <%- nameLc -%>: null,
+      error: null,
+      errors: null,
+    }
+  },
+  created() {
+    this.fetchData()
+  },
+  watch: {
+    '$route': 'fetchData',
+  },
+  methods: {
+    fetchData() {
+      var t = this
+      t.error = null
+      if (this.$route.params.id) {
+        axios.get('<%- baseUrl -%>/<%- nameLc -%>/' +
+          this.$route.params.id).then(function (response) {
+            t.<%- nameLc -%> = response.data
+          }, function (err) {
+            t.parent.error = err
+          })
+      }
+    },
+    onSubmit() {
+      var t = this;
+      var url = '<%- baseUrl -%>/<%- nameLc -%>'
+      if (t.$route.params.id) { 
+        url += '/' + t.$route.params.id
+      }
+      axios.put(url, t.<%- nameLc -%>).then(function (response) {
+        t.$router.push('/<%- namePlLc -%>')
+      }).catch( function (error) {
+        if ( error.response && error.response.data && error.response.data.errors )
+          t.errors = error.response.data.errors
+      })
+    }
+  }
+}
+</script>

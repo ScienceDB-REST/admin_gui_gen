@@ -1,0 +1,33 @@
+<template>
+  <div @click="onClick">
+    <div class="inline field">
+      <label>id: </label>
+      <span>{{rowData.id}}</span>
+    </div>
+    <% for ( i=0; i<attributesArr.length; i++ ) { -%>
+      <div class="inline field">
+        <label><%- attributesArr[i][0] -%>:</label>
+        <span>{{rowData.<%- attributesArr[i][0] -%>}}</span>
+      </div>
+    <% } -%>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    rowData: {
+      type: Object,
+      required: true
+    },
+    rowIndex: {
+      type: Number
+    }
+  },
+  methods: {
+    onClick (event) {
+      console.log('my-detail-row: on-click', event.target)
+    }
+  }
+}
+</script>

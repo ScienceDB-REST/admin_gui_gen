@@ -1,0 +1,77 @@
+<template>
+  <div id="<%- nameLc -%>-form-elemns-div">
+
+  <input type="hidden" v-model="<%- nameLc -%>.id"/>
+  
+  <% for ( i=0; i<attributesArr.length; i++ ) { -%>
+
+    <div id="<%- nameLc -%>-<%- attributesArr[i][0] -%>-div" class="form-group">
+      <label><%- attributesArr[i][0] -%></label>
+      <input type="text" v-model="<%- nameLc -%>.<%- attributesArr[i][0] -%>" class="form-control"/>
+      <div id="<%- nameLc -%>-<%- attributesArr[i][0] -%>-err" v-if="typeof validationError('<%- attributesArr[i][0] -%>') !== 'undefined'">
+        {{validationError('<%- attributesArr[i][0] -%>').message}}
+      </div>
+    </div>
+
+  <% } -%>
+
+  <% for ( i=0; i<belongsTosArr.length; i++ ) { -%>
+    <% var bt = belongsTosArr[i] -%>
+
+    <div id="<%- nameLc -%>-<%- bt.targetModelLc -%>-div" class="form-group">
+      <label><%- bt.targetModel -%></label>
+      <foreign-key-form-element
+        searchUrl="<%- baseUrl -%>/<%- bt.targetModelPlLc -%>"
+        v-model:foreignKey="<%- nameLc -%>.<%- bt.foreignKey -%>"
+        label="<%- bt.label -%>"
+        <% if (typeof bt.subLabel !== 'undefined' && bt.subLabel !== null) { -%>
+        subLabel="<%- bt.subLabel -%>"
+        <% } -%>
+        valueKey="<%- bt.label -%>"
+        v-bind:initialInput="<%- bt.targetModelLc -%>InitialLabel">
+      </foreign-key-form-element>
+    </div>
+
+  <% } -%>
+  
+  </div>
+</template>
+
+<script>
+<% if (typeof belongsTosArr !== 'undefined' && belongsTosArr.length > 0) { -%>
+import Vue from 'vue'
+import foreignKeyFormElement from './foreignKeyFormElement.vue'
+
+Vue.component('foreign-key-form-element', foreignKeyFormElement)
+<% } -%>
+
+export default {
+  props: [ '<%- nameLc -%>', 'errors' ],
+  <% for ( i=0; i<belongsTosArr.length; i++ ) { -%>
+    <% var bt = belongsTosArr[i] -%>
+  computed: {
+    <%- bt.targetModelLc -%>InitialLabel: function () {
+      var x = this.<%- nameLc -%>.<%- bt.targetModel %>
+      if (x !== null && typeof x === 'object' &&
+          x['<%- bt.label -%>'] !== null &&
+          typeof x['<%- bt.label -%>'] !== 'undefined') {
+        return x['<%- bt.label -%>']
+      } else {
+        return ''
+      }
+    }
+    <% if (i < (belongsTosArr.length - 1)) { -%>
+    ,
+    <% } -%>
+  },
+  <% } -%>
+  methods: {
+    validationError(modelField) {
+      if (this.errors == null) return false;
+      return this.errors.find(function (el) {
+        return el.path === modelField
+      })
+    }
+  }
+}
+</script>
