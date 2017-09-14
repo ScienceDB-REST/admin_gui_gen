@@ -27,7 +27,7 @@
         <% if (typeof bt.subLabel !== 'undefined' && bt.subLabel !== null) { -%>
         subLabel="<%- bt.subLabel -%>"
         <% } -%>
-        valueKey="<%- bt.label -%>"
+        valueKey="<%- bt.primaryKey -%>"
         v-bind:initialInput="<%- bt.targetModelLc -%>InitialLabel">
       </foreign-key-form-element>
     </div>
