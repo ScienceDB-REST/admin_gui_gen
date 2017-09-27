@@ -47,9 +47,9 @@ Vue.component('foreign-key-form-element', foreignKeyFormElement)
 
 export default {
   props: [ '<%- nameLc -%>', 'errors' ],
+  computed: {
   <% for ( i=0; i<belongsTosArr.length; i++ ) { -%>
     <% var bt = belongsTosArr[i] -%>
-  computed: {
     <%- bt.targetModelLc -%>InitialLabel: function () {
       var x = this.<%- nameLc -%>.<%- bt.targetModel %>
       if (x !== null && typeof x === 'object' &&
@@ -63,8 +63,8 @@ export default {
     <% if (i < (belongsTosArr.length - 1)) { -%>
     ,
     <% } -%>
-  },
   <% } -%>
+  },
   methods: {
     validationError(modelField) {
       if (this.errors == null) return false;
