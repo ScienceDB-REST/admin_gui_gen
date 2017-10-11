@@ -1,0 +1,43 @@
+import Vue from 'vue'
+import Router from 'vue-router'
+import Hello from '@/components/Hello'
+<%  for ( i=0; i<models.length; i++ ) { -%>
+import <%- models[i].namePlLc -%> from '@/components/<%- models[i].namePlLc -%>'
+import <%- models[i].name -%>Create from '@/components/<%- models[i].name -%>CreateForm'
+import <%- models[i].name -%>Edit from '@/components/<%- models[i].name -%>EditForm'
+<%  } -%>
+
+Vue.use(Router)
+
+var routes = [
+    {
+      path: '/',
+      name: 'Hello',
+      component: Hello
+    },
+    <%  for ( i=0; i<models.length; i++ ) { -%>
+    {
+      path: '/<%- models[i].namePlLc -%>',
+      name: '<%- models[i].namePl -%>',
+      component: <%- models[i].namePl -%>,
+    },
+    {
+      path: '/<%- models[i].nameLc -%>/:id',
+      name: '<%- models[i].name -%>Edit',
+      component: <%- models[i].name -%>Edit,
+    },
+    {
+      path: '/<%- models[i].nameLc -%>',
+      name: '<%- models[i].name -%>Create',
+      component: <%- models[i].name -%>Create,
+    <%  if(i === models.length - 1) { -%>
+    }
+    <%  }else{ -%>
+    },
+    <%  } -%>    
+    <%  } -%>
+  ];
+
+export default new Router({
+  routes: routes
+})
