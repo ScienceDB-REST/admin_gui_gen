@@ -48,31 +48,20 @@ exports.typeAttributes = function (attributesArray) {
   return y;
 }
 
-exports.associationsArray = function (associationsStr) {
-  if (typeof associationsStr === 'undefined') {
-    return []
-  }
-  return associationsStr.trim().split(/\s+|,/).filter(function (x) {
-    return x !== ''
-  }).map(function (x) {
-    return x.trim().split(/:/)
-  })
-}
-
 // parses the CLI argument --belongsTos and returns the values as an array of
 // BelongTo Objects:
 exports.parseBelongsTos = function (belongsTosStr) {
-  return exports.associationsArray(belongsTosStr).map(function (bt) {
+  return JSON.parse(belongsTosStr).map(function(item) {
     return {
-      targetModel: bt[0],
-      foreignKey: bt[1],
-      primaryKey: bt[2],
-      label: bt[3],
-      subLabel: bt[4],
-      targetModelLc: bt[0].toLowerCase(),
-      targetModelPlLc: inflection.pluralize(bt[0]).toLowerCase()
+      targetModel: item.targetModel,
+      foreignKey: item.foreignKey,
+      primaryKey: item.primaryKey,
+      label: item.label,
+      subLabel: item.subLabel,
+      targetModelLc: item.targetModel.toLowerCase(),
+      targetModelPlLc: inflection.pluralize(item.targetModel).toLowerCase()
     }
-  })
+  });
 }
 
 // Copies file found under sourcePath to targetPath if and only if target does
