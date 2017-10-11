@@ -27,6 +27,7 @@ program
 var directory = program.args[0]
 console.log('directory: %s name: %s attributes: %s belongsTos: %s',
   directory, program.name, program.attributes, program.belongsTos);
+
 var ejbOpts = {
   baseUrl: program.baseUrl,
   name: program.name,
@@ -35,7 +36,7 @@ var ejbOpts = {
   namePlLc: inflection.pluralize(program.name).toLowerCase(),
   attributesArr: funks.attributesArray(program.attributes),
   typeAttributes: funks.typeAttributes(funks.attributesArray(program.attributes)),
-  belongsTosArr: funks.parseBelongsTos(program.belongsTos),
+  belongsTosArr: funks.parseBelongsTos(program.belongsTos)
 }
 var componentsDir = path.resolve(directory, "src", "components")
 // table
@@ -48,7 +49,7 @@ funks.renderToFile(customActions, 'customActions', ejbOpts)
 var details = path.resolve(componentsDir, program.name + 'DetailRow.vue')
 funks.renderToFile(details, 'detailView', ejbOpts)
 // form elements
-console.log("belongsToArr: " + JSON.stringify(ejbOpts.belongsToArr));
+console.log("belongsTosArr: " + JSON.stringify(ejbOpts.belongsTosArr));
 var formElmns = path.resolve(componentsDir, program.name + 'FormElemns.vue')
 funks.renderToFile(formElmns, 'formElements', ejbOpts)
 // create form
@@ -60,11 +61,14 @@ funks.renderToFile(editForm, 'editForm', ejbOpts)
 // routes
 var routesExt = path.resolve( directory, "src", "router", program.name + "Routes.js" )
 funks.renderToFile(routesExt, 'routes', ejbOpts)
+// constants
+var constants = path.resolve( directory, "src", "sciencedb-globals.js" )
+funks.renderToFile(constants, 'global_constant', ejbOpts)
 // Copy static (not to be rendered) code into target dir, if not already
 // present:
 var filtBarPath = path.resolve(directory, 'src', 'components', 'FilterBar.vue')
 funks.copyFileIfNotExists(path.resolve(__dirname, 'FilterBar.vue'), filtBarPath)
 var forKeyPath = path.resolve(directory, 'src', 'components', 'foreignKeyFormElement.vue')
-funks.copyFileIfNotExists(path.resolve(__dirname, 'foreignKeyFormElement.vue'), forKeyPath)
+funks.copyFileIfNotExists(path.resolve(__dirname, 'foreignKeyFormElement.vue'), forKeyPath)*/
 // DONE
 console.log("\nDONE");
