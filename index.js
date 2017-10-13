@@ -48,7 +48,7 @@ funks.renderToFile(customActions, 'customActions', ejbOpts)
 var details = path.resolve(componentsDir, program.name + 'DetailRow.vue')
 funks.renderToFile(details, 'detailView', ejbOpts)
 // form elements
-console.log("belongsToArr: " + JSON.stringify(ejbOpts.belongsToArr));
+console.log("belongsTosArr: " + JSON.stringify(ejbOpts.belongsTosArr));
 var formElmns = path.resolve(componentsDir, program.name + 'FormElemns.vue')
 funks.renderToFile(formElmns, 'formElements', ejbOpts)
 // create form
@@ -60,6 +60,9 @@ funks.renderToFile(editForm, 'editForm', ejbOpts)
 // routes
 var routesExt = path.resolve( directory, "src", "router", program.name + "Routes.js" )
 funks.renderToFile(routesExt, 'routes', ejbOpts)
+// constants
+var constants = path.resolve( directory, "src", "sciencedb-globals.js" )
+funks.renderToFile(constants, 'global_constant', ejbOpts)
 // Copy static (not to be rendered) code into target dir, if not already
 // present:
 var filtBarPath = path.resolve(directory, 'src', 'components', 'FilterBar.vue')
