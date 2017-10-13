@@ -9,6 +9,8 @@ jsb = require('js-beautify').js_beautify;
 funks = require(path.resolve(__dirname, 'funks.js'));
 program = require('commander');
 
+modelsCreated = require(path.resolve(__dirname, 'modelsNames.js'));
+
 
 // Parse command-line-arguments and execute:
 program
@@ -60,6 +62,11 @@ funks.renderToFile(editForm, 'editForm', ejbOpts)
 // routes
 var routesExt = path.resolve( directory, "src", "router", program.name + "Routes.js" )
 funks.renderToFile(routesExt, 'routes', ejbOpts)
+//automatically injects models components into routes array (index.js file)
+var modelsObj = modelsCreated.getSavedModelsNames(program.name);
+var indexRoutesExt = path.resolve( directory, "src", "router", "index.js" )
+funks.renderToFile(indexRoutesExt, 'routes_index', modelsObj)
+console.log('dir', modelsObj);
 // constants
 var constants = path.resolve( directory, "src", "sciencedb-globals.js" )
 funks.renderToFile(constants, 'global_constant', ejbOpts)
