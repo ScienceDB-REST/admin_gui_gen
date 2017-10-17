@@ -19,8 +19,8 @@ program
   .option('--attributes <model_attributes>',
     'The model attributes as provided to \'sequelize model:create\'.')
   .option(
-    '--belongsTos <ModelName1:foreignKey:id:label:subLabel, ModelName2:foreignKey:id:label:subLabel, ...>',
-    'ModelName as instantiated in Sequelize, foreignKey name of the column holding the belongsTo foreignKey, id name of the primaryKey column in the target model, label name of the column to be used as a display name, subLabel optional name of the column in the target model to be used as a sub-label'
+    '--belongsTos [{"targetModel":"ModelName1","foreignKey":"foreignKey1","primaryKey":"id1","label":"label1","subLabel":"subLabel1","as":"name1"}...]',
+    'ModelName as instantiated in Sequelize, foreignKey name of the column holding the belongsTo foreignKey, id name of the primaryKey column in the target model, label name of the column to be used as a display name, subLabel optional name of the column in the target model to be used as a sub-label, as is used in place of the target model name'
   ).parse(process.argv);
 
 // Do your job:
