@@ -51,7 +51,14 @@ export default {
   <% for ( i=0; i<belongsTosArr.length; i++ ) { -%>
     <% var bt = belongsTosArr[i] -%>
     <%- bt.targetModelLc -%>InitialLabel: function () {
+      <% if (!bt.hasOwnProperty('as')){ -%>
       var x = this.<%- nameLc -%>.<%- bt.targetModel %>
+      <% } -%>
+      <% if (bt.hasOwnProperty('as')){ -%>
+      <% if (bt.as !== bt.targetModel){ -%>
+      var x = this.<%- nameLc -%>.<%- bt.as %>
+      <% } -%>
+      <% } -%>
       if (x !== null && typeof x === 'object' &&
           x['<%- bt.label -%>'] !== null &&
           typeof x['<%- bt.label -%>'] !== 'undefined') {

@@ -48,20 +48,69 @@ exports.typeAttributes = function (attributesArray) {
   return y;
 }
 
+exports.associationsArray = function (associationsStr) {
+  if (typeof associationsStr === 'undefined') {
+    return []
+  }
+  return associationsStr.trim().split(/\s+|,/).filter(function (x) {
+    return x !== ''
+  }).map(function (x) {
+    return x.trim().split(/:/)
+  })
+}
+
 // parses the CLI argument --belongsTos and returns the values as an array of
 // BelongTo Objects:
-exports.parseBelongsTos = function (belongsTosStr) {
-  return JSON.parse(belongsTosStr).map(function(item) {
+/*exports.parseBelongsTos = function (belongsTosStr) {
+  return exports.associationsArray(belongsTosStr).map(function (bt) {
     return {
-      targetModel: item.targetModel,
-      foreignKey: item.foreignKey,
-      primaryKey: item.primaryKey,
-      label: item.label,
-      subLabel: item.subLabel,
-      targetModelLc: item.targetModel.toLowerCase(),
-      targetModelPlLc: inflection.pluralize(item.targetModel).toLowerCase()
+      targetModel: bt[0],
+      foreignKey: bt[1],
+      primaryKey: bt[2],
+      label: bt[3],
+      subLabel: bt[4],
+      targetModelLc: bt[0].toLowerCase(),
+      targetModelPlLc: inflection.pluralize(bt[0]).toLowerCase()
     }
-  });
+  })
+}*/
+exports.parseBelongsTos = function (belongsTosStr) {
+  var belongsTosObject = JSON.parse(belongsTosStr);
+  console.log('obj', belongsTosObject)
+
+  var belongsTosArray = []
+
+  for(var i = 0; i < belongsTosObject.length; i++) {
+    var belongsTosEntity = {}
+
+    if(belongsTosObject[i].hasOwnProperty('as')){
+      belongsTosEntity = {
+        targetModel: belongsTosObject[i].targetModel,
+        foreignKey: belongsTosObject[i].foreignKey,
+        primaryKey: belongsTosObject[i].primaryKey,
+        label: belongsTosObject[i].label,
+        subLabel: belongsTosObject[i].subLabel,
+        as: belongsTosObject[i].as,
+        targetModelLc: belongsTosObject[i].targetModel.toLowerCase(),
+        targetModelPlLc: inflection.pluralize(belongsTosObject[i].targetModel).toLowerCase()
+      }
+    }
+    else {
+      belongsTosEntity = {
+        targetModel: belongsTosObject[i].targetModel,
+        foreignKey: belongsTosObject[i].foreignKey,
+        primaryKey: belongsTosObject[i].primaryKey,
+        label: belongsTosObject[i].label,
+        subLabel: belongsTosObject[i].subLabel,
+        targetModelLc: belongsTosObject[i].targetModel.toLowerCase(),
+        targetModelPlLc: inflection.pluralize(belongsTosObject[i].targetModel).toLowerCase()
+      }
+    }
+    console.log('item',belongsTosEntity)
+    belongsTosArray.push(belongsTosEntity)
+  }
+
+  return belongsTosArray
 }
 
 // Copies file found under sourcePath to targetPath if and only if target does

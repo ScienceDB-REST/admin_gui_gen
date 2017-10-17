@@ -48,7 +48,7 @@ funks.renderToFile(customActions, 'customActions', ejbOpts)
 var details = path.resolve(componentsDir, program.name + 'DetailRow.vue')
 funks.renderToFile(details, 'detailView', ejbOpts)
 // form elements
-console.log("belongsToArr: " + JSON.stringify(ejbOpts.belongsToArr));
+console.log("belongsToArr: " + JSON.stringify(ejbOpts.belongsTosArr));
 var formElmns = path.resolve(componentsDir, program.name + 'FormElemns.vue')
 funks.renderToFile(formElmns, 'formElements', ejbOpts)
 // create form
