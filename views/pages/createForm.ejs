@@ -23,14 +23,14 @@ export default {
     return {
       loading: false,
       <%- nameLc -%>: {},
-      error: null,
+      error: {},
       errors: null,
     }
   },
   methods: {
     onSubmit() {
       var t = this;
-      var url = '<%- baseUrl -%>/<%- nameLc -%>'
+      var url = this.$baseUrl() + '/<%- namePlLc -%>'
       axios.post(url, t.<%- nameLc -%>).then(function (response) {
         t.$router.push('/<%- namePlLc -%>')
       }).catch( function (error) {

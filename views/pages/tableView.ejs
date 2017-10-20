@@ -1,11 +1,25 @@
 <template>
   <div class="ui container">
-    <filter-bar></filter-bar>
-    <div class="inline field pull-left">
-      <router-link v-bind:to="'<%- nameLc -%>'"><button class="ui primary button">Add <%- nameLc -%></button></router-link>
-      <button class="ui primary button" v-on:click="onDelete">Delete</button>
-      <button class="ui primary button" v-on:click="onCsvExport">CSV</button>
-    </div>
+    <collapse accordion>
+      <collapse-item title="Search" actived>
+        <filter-bar></filter-bar>
+      </collapse-item>
+      <collapse-item title="Add/Delete/Export" actived>
+        <div class="column is-5 is-horizontal">          
+          <router-link v-bind:to="'<%- name -%>'" class="button is-primary">
+            <button class="button is-primary">Add <%- name -%></button>
+          </router-link>
+          <button class="button is-primary" v-on:click="onDelete">Delete</button>       
+          <div id="demo" class="column is-3">
+            <input type="radio" name="export-type" value="cvs" v-model="exportType" />
+            <input type="radio" name="export-type" value="excel" v-model="exportType" />
+            {{ exportType }}
+          </div>
+          <a :href="downloadExcelUrl" class="button is-primary" :class="activeClass" download>Export</a>
+        </div>       
+      </collapse-item>
+    </collapse>
+
     <vuetable ref="vuetable"
       api-url="<%- baseUrl -%>/<%- namePlLc -%>/vue_table"
       :fields="fields"
@@ -15,6 +29,8 @@
       :appendParams="moreParams"
       @vuetable:pagination-data="onPaginationData"
       @vuetable:cell-clicked="onCellClicked"
+      @vuetable:checkbox-toggled="onCheckBoxClicked"
+      @vuetable:checkbox-toggled-all="onSelectAllClicked"
     ></vuetable>
     <div class="vuetable-pagination ui basic segment grid">
       <vuetable-pagination-info ref="paginationInfo"
@@ -34,6 +50,8 @@ import <%- name -%>CustomActions from './<%- name -%>CustomActions.vue'
 import <%- name -%>DetailRow from './<%- name -%>DetailRow.vue'
 import FilterBar from './FilterBar.vue'
 
+import ExtendedSearchBar from './ExtendedSearchBar.vue'
+
 import axios from 'axios'
 
 import Vue from 'vue'
@@ -43,6 +61,8 @@ Vue.use(VueEvents)
 Vue.component('<%- nameLc -%>-custom-actions', <%- name -%>CustomActions)
 Vue.component('<%- nameLc -%>-detail-row', <%- name -%>DetailRow)
 Vue.component('filter-bar', FilterBar)
+
+Vue.component('extended-search-bar', ExtendedSearchBar)
 
 export default {
   components: {
@@ -54,7 +74,7 @@ export default {
   data() {
     return {
       fields: [{
-          name: '__sequence',
+          name: 'id',
           title: '#',
           titleClass: 'center aligned',
           dataClass: 'right aligned'
@@ -77,7 +97,15 @@ export default {
           dataClass: 'center aligned'
         }
       ],
-      moreParams: {}
+      moreParams: {},
+      downloadExcelUrl: '',
+      activeClass: 'is-disabled',
+      exportType: "cvs"
+    }
+  },
+  watch: {
+    exportType: function(newRole){
+      this.downloadFile();
     }
   },
   methods: {
@@ -89,7 +117,6 @@ export default {
       this.$refs.vuetable.changePage(page)
     },
     onCellClicked(data, field, event) {
-      console.log('cellClicked: ', field.name)
       this.$refs.vuetable.toggleDetailRow(data.id)
     },
     onFilterSet(filterText) {
@@ -102,40 +129,44 @@ export default {
       this.moreParams = {}
       Vue.nextTick(() => this.$refs.vuetable.refresh())
     },
-    onDelete () {
-      if (window.confirm("Do you really want to delete <%- name -%> of ids '" + this.$refs.vuetable.selectedTo.join("; ") + "'?")) {
+    onDelete() {
+      if (window.confirm("Do you really want to delete <%- namePlLc -%> of ids '" + this.$refs.vuetable.selectedTo.join("; ") + "'?")) {
         var t = this;
-        var url = '<%- baseUrl -%>/<%- nameLc -%>/' + this.$refs.vuetable.selectedTo.join("/")
-        axios.delete(url).then(function (response) {
+        var url = this.$baseUrl() + '/<%- name -%>/' + this.$refs.vuetable.selectedTo.join("/")
+        axios.delete(url).then(function(response) {
           t.$refs.vuetable.refresh()
-        }).catch(function (error) {
+        }).catch(function(error) {
           t.error = error
         })
       }
-    },
-    onCsvExport () {
-      var t = this;
-      var url = '<%- baseUrl -%>/<%- namePlLc -%>/example_csv' + '?array=[' + this.$refs.vuetable.selectedTo.join(",") + ']'
-      
-      axios.delete(url).then(function (response) {
 
-        var a = document.createElement("a");        
-        document.body.appendChild(a);
-        a.style = "display: none";
-        var blob = new Blob([response.data], {type: "octet/stream"});
-        var url = window.URL.createObjectURL(blob);
-        a.href = url;
-        a.download = <%- nameLc -%> + '.csv';
-        a.click();
-        window.URL.revokeObjectURL(url);
-      }).catch(function (error) {
-        t.error = error
-      })
+    },
+    onCheckBoxClicked() {
+      this.downloadFile();   
+    },
+    onSelectAllClicked() {
+      this.downloadFile();
+    },
+    downloadFile() {
+      if(this.$refs.vuetable.selectedTo.length > 0) {
+        this.activeClass = 'is-active';
+        var urlToExportFile = this.$baseUrl() + '/<%- namePlLc -%>/example_csv' + '?array=[' + this.$refs.vuetable.selectedTo.join(",") + ']';
+        if(this.exportType === 'excel'){
+          urlToExportFile = this.$baseUrl() + '/<%- namePlLc -%>/example_csv' + '?excel=true&array=[' + this.$refs.vuetable.selectedTo.join(",") + ']';
+        }
+        this.downloadExcelUrl = urlToExportFile
+      }
+      else {
+        this.activeClass = 'is-disabled';
+        this.downloadExcelUrl = ''
+      }
     }
   },
   mounted() {
     this.$events.$on('filter-set', eventData => this.onFilterSet(eventData))
     this.$events.$on('filter-reset', e => this.onFilterReset())
+
+    this.$events.$on('extended-filter-set', eventData => this.onExtendedFilterSet(eventData))
   }
 }
 </script>
