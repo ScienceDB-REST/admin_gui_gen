@@ -63,7 +63,7 @@ funks.renderToFile(editForm, 'editForm', ejbOpts)
 var routesExt = path.resolve( directory, "src", "router", program.name + "Routes.js" )
 funks.renderToFile(routesExt, 'routes', ejbOpts)
 //automatically injects models components into routes array (index.js file)
-var modelsObj = modelsCreated.getSavedModelsNames(program.name);
+var modelsObj = modelsCreated.getSavedModelsNames(program.name, directory);
 var indexRoutesExt = path.resolve( directory, "src", "router", "index.js" )
 funks.renderToFile(indexRoutesExt, 'routes_index', modelsObj)
 console.log('dir', modelsObj);

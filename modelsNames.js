@@ -2,8 +2,8 @@ inflection = require('inflection');
 list = require('list-dir');
 _ = require('lodash');
 
-exports.getSavedModelsNames = function (newModel) {
-    var filesNames = list.sync('/root/projects/ScienceDbGui/src/router')
+exports.getSavedModelsNames = function (newModel, directory) {
+    var filesNames = list.sync(directory)
 
     var models = _.filter(filesNames, function(name) { 
         return _.includes(name, 'Routes.js');
