@@ -7,7 +7,8 @@
     v-bind:init-value="initialInput"
     v-bind:anchor="label"
     v-bind:label="subLabel"
-    :on-select="setForeignKey">
+    :on-select="setForeignKey"
+    :onInput="onUserInput">
   </autocomplete>
     
   </div>
@@ -31,6 +32,12 @@ export default {
       console.log("setForeignKey(): t.valueKey=" + this.valueKey + ", data[t.valueKey]="
           + data[this.valueKey] + ", data.id=" + data.id );
       this.$emit('input', data[this.valueKey])
+    },
+
+    onUserInput(data) {
+      if(data === ''){
+        this.$emit('input', null)
+      }
     }
   }
 }

@@ -15,7 +15,8 @@ modelsCreated = require(path.resolve(__dirname, 'modelsNames.js'));
 // Parse command-line-arguments and execute:
 program
   .arguments('<directory>')
-  .option('--baseUrl <URL>', 'The URL to the backend server, e.g. http://my.service.org:3000')
+  .option('--baseUrl <URL>',
+    'The URL to the backend server, e.g. http://my.service.org:3000')
   .option('--name <modelName>',
     'The name of the model as provided to \'sequelize model:create\'.')
   .option('--attributes <model_attributes>',
@@ -44,13 +45,14 @@ var componentsDir = path.resolve(directory, "src", "components")
 var table = path.resolve(componentsDir, ejbOpts['namePl'] + '.vue')
 funks.renderToFile(table, 'tableView', ejbOpts)
 // custom actions
-var customActions = path.resolve(componentsDir, program.name + 'CustomActions.vue')
+var customActions = path.resolve(componentsDir, program.name +
+  'CustomActions.vue')
 funks.renderToFile(customActions, 'customActions', ejbOpts)
 // details
 var details = path.resolve(componentsDir, program.name + 'DetailRow.vue')
 funks.renderToFile(details, 'detailView', ejbOpts)
 // form elements
-console.log("belongsToArr: " + JSON.stringify(ejbOpts.belongsToArr));
+console.log("belongsTosArr: " + JSON.stringify(ejbOpts.belongsTosArr));
 var formElmns = path.resolve(componentsDir, program.name + 'FormElemns.vue')
 funks.renderToFile(formElmns, 'formElements', ejbOpts)
 // create form
@@ -60,18 +62,23 @@ funks.renderToFile(createForm, 'createForm', ejbOpts)
 var editForm = path.resolve(componentsDir, program.name + 'EditForm.vue')
 funks.renderToFile(editForm, 'editForm', ejbOpts)
 // routes
-var routesExt = path.resolve( directory, "src", "router", program.name + "Routes.js" )
+var routesExt = path.resolve(directory, "src", "router", program.name +
+  "Routes.js")
 funks.renderToFile(routesExt, 'routes', ejbOpts)
-//automatically injects models components into routes array (index.js file)
+// automatically injects models components into routes array (index.js file)
 var modelsObj = modelsCreated.getSavedModelsNames(program.name, directory);
-var indexRoutesExt = path.resolve( directory, "src", "router", "index.js" )
+var indexRoutesExt = path.resolve(directory, "src", "router", "index.js")
 funks.renderToFile(indexRoutesExt, 'routes_index', modelsObj)
-console.log('dir', modelsObj);
+// constants
+var constants = path.resolve(directory, "src", "sciencedb-globals.js")
+funks.renderToFile(constants, 'global_constant', ejbOpts)
 // Copy static (not to be rendered) code into target dir, if not already
 // present:
 var filtBarPath = path.resolve(directory, 'src', 'components', 'FilterBar.vue')
 funks.copyFileIfNotExists(path.resolve(__dirname, 'FilterBar.vue'), filtBarPath)
-var forKeyPath = path.resolve(directory, 'src', 'components', 'foreignKeyFormElement.vue')
-funks.copyFileIfNotExists(path.resolve(__dirname, 'foreignKeyFormElement.vue'), forKeyPath)
+var forKeyPath = path.resolve(directory, 'src', 'components',
+  'foreignKeyFormElement.vue')
+funks.copyFileIfNotExists(path.resolve(__dirname, 'foreignKeyFormElement.vue'),
+  forKeyPath)
 // DONE
 console.log("\nDONE");
