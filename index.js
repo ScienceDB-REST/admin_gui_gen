@@ -81,5 +81,7 @@ var forKeyPath = path.resolve(directory, 'src', 'components',
   'foreignKeyFormElement.vue')
 funks.copyFileIfNotExists(path.resolve(__dirname, 'foreignKeyFormElement.vue'),
   forKeyPath)
+var addNewPath = path.resolve(directory, 'src', 'components', 'AddNewEntityButton.vue')
+funks.copyFileIfNotExists(path.resolve(__dirname, 'AddNewEntityButton.vue'), addNewPath)
 // DONE
 console.log("\nDONE");
