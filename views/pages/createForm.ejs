@@ -30,7 +30,7 @@ export default {
   methods: {
     onSubmit() {
       var t = this;
-      var url = this.$baseUrl() + '/<%- namePlLc -%>'
+      var url = this.$baseUrl + '/<%- nameLc -%>'
       axios.post(url, t.<%- nameLc -%>).then(function (response) {
         t.$router.push('/<%- namePlLc -%>')
       }).catch( function (error) {

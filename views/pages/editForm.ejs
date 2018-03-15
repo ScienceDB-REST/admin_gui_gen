@@ -38,7 +38,7 @@ export default {
       var t = this
       t.error = null
       if (this.$route.params.id) {
-        axios.get(this.$baseUrl() + '/<%- nameLc -%>/' +
+        axios.get(this.$baseUrl + '/<%- nameLc -%>/' +
           this.$route.params.id).then(function (response) {
             t.<%- nameLc -%> = response.data
           }, function (err) {
@@ -48,7 +48,7 @@ export default {
     },
     onSubmit() {
       var t = this;
-      var url = this.$baseUrl() + '/<%- nameLc -%>'
+      var url = this.$baseUrl + '/<%- nameLc -%>'
       if (t.$route.params.id) { 
         url += '/' + t.$route.params.id
       }

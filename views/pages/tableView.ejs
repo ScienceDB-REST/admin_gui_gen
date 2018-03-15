@@ -7,7 +7,7 @@
       <button class="ui primary button" v-on:click="onCsvExport">CSV</button>
     </div>
     <vuetable ref="vuetable"
-      api-url="<%- baseUrl -%>/<%- namePlLc -%>/vue_table"
+      api-url=this.$baseUrl + "/<%- namePlLc -%>/vue_table"
       :fields="fields"
       pagination-path=""
       :per-page="20"

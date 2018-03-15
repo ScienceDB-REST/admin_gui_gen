@@ -21,7 +21,7 @@
     <div id="<%- nameLc -%>-<%- bt.targetModelLc -%>-div" class="form-group">
       <label><%- bt.targetModel -%></label>
       <foreign-key-form-element
-        searchUrl="<%- baseUrl -%>/<%- bt.targetModelPlLc -%>"
+        searchUrl = this.$baseUrl + "/<%- bt.targetModelPlLc -%>"
         v-model:foreignKey="<%- nameLc -%>.<%- bt.foreignKey -%>"
         label="<%- bt.label -%>"
         <% if (typeof bt.subLabel !== 'undefined' && bt.subLabel !== null) { -%>

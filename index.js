@@ -30,6 +30,7 @@ program
 var directory = program.args[0]
 console.log('directory: %s name: %s attributes: %s belongsTos: %s',
   directory, program.name, program.attributes, program.belongsTos);
+
 var ejbOpts = {
   baseUrl: program.baseUrl,
   name: program.name,
@@ -38,7 +39,7 @@ var ejbOpts = {
   namePlLc: inflection.pluralize(program.name).toLowerCase(),
   attributesArr: funks.attributesArray(program.attributes),
   typeAttributes: funks.typeAttributes(funks.attributesArray(program.attributes)),
-  belongsTosArr: funks.parseBelongsTos(program.belongsTos),
+  belongsTosArr: funks.parseBelongsTos(program.belongsTos)
 }
 var componentsDir = path.resolve(directory, "src", "components")
 // table
