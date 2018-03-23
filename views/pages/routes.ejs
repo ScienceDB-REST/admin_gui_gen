@@ -1,6 +1,7 @@
 import <%- namePlLc -%> from '@/components/<%- namePlLc -%>'
 import <%- name -%>Create from '@/components/<%- name -%>CreateForm'
 import <%- name -%>Edit from '@/components/<%- name -%>EditForm'
+import <%- name -%>UploadCsv from '@/components/<%- name -%>UploadCsvForm'
 
 routes = routes.concat(
   [
@@ -18,6 +19,11 @@ routes = routes.concat(
       path: '/<%- nameLc -%>',
       name: '<%- name -%>Create',
       component: <%- name -%>Create,
+    },
+    {
+      path: '/<%- namePlLc -%>/upload_csv',
+      name: '<%- name -%>UploadCsv',
+      component: <%- name -%>UploadCsv
     }
   ]
 )

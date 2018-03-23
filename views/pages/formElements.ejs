@@ -19,9 +19,9 @@
     <% var bt = belongsTosArr[i] -%>
 
     <div id="<%- nameLc -%>-<%- bt.targetModelLc -%>-div" class="form-group">
-      <label><%- bt.targetModel -%></label>
+      <label><%- bt.relationName -%></label>
       <foreign-key-form-element
-        searchUrl = this.$baseUrl + "/<%- bt.targetModelPlLc -%>"
+        :searchUrl = "this.$baseUrl() + '/<%- bt.targetModelPlLc -%>'"
         v-model:foreignKey="<%- nameLc -%>.<%- bt.foreignKey -%>"
         label="<%- bt.label -%>"
         <% if (typeof bt.subLabel !== 'undefined' && bt.subLabel !== null) { -%>
@@ -51,7 +51,7 @@ export default {
   <% for ( i=0; i<belongsTosArr.length; i++ ) { -%>
     <% var bt = belongsTosArr[i] -%>
     <%- bt.targetModelLc -%>InitialLabel: function () {
-      var x = this.<%- nameLc -%>.<%- bt.targetModel %>
+      var x = this.<%- nameLc -%>.<%- bt.relationName %>
       if (x !== null && typeof x === 'object' &&
           x['<%- bt.label -%>'] !== null &&
           typeof x['<%- bt.label -%>'] !== 'undefined') {

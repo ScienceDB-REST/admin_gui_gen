@@ -5,8 +5,10 @@ _ = require('lodash');
 exports.getSavedModelsNames = function (newModel, directory) {
     var filesNames = list.sync(directory)
 
-    var models = _.filter(filesNames, function(name) { 
+    var models = _.map(_.filter(filesNames, function(name) {
         return _.includes(name, 'Routes.js');
+    }), function(filePath) {
+        return filePath.toString().replace(/.*\//, "")
     });
 
     var createdModels = _.map(models, function(model){

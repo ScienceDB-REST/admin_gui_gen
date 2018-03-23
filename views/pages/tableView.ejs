@@ -3,11 +3,11 @@
     <filter-bar></filter-bar>
     <div class="inline field pull-left">
       <router-link v-bind:to="'<%- nameLc -%>'"><button class="ui primary button">Add <%- nameLc -%></button></router-link>
-      <button class="ui primary button" v-on:click="onDelete">Delete</button>
-      <button class="ui primary button" v-on:click="onCsvExport">CSV</button>
+      <a :href="this.$baseUrl() + '/<%- namePlLc -%>/example_csv'"><button class="ui primary button">CSV Example Table</button></a>
+      <router-link v-bind:to="'/<%- namePlLc -%>/upload_csv'"><button class="ui primary button">CSV Upload</button></router-link>
     </div>
     <vuetable ref="vuetable"
-      api-url=this.$baseUrl + "/<%- namePlLc -%>/vue_table"
+      :api-url="this.$baseUrl() + '/<%- namePlLc -%>/vue_table'"
       :fields="fields"
       pagination-path=""
       :per-page="20"
@@ -55,15 +55,17 @@ export default {
     return {
       fields: [{
           name: 'id',
-          title: '#',
+          title: 'ID',
           titleClass: 'center aligned',
           dataClass: 'right aligned'
         },
-        {
-          name: '__checkbox',
-          titleClass: 'center aligned',
-          dataClass: 'center aligned'
-        },
+        // For now, we do not render checkboxes, as we yet have to provide
+        // functions for selected rows.
+        //{
+        //  name: '__checkbox',
+        //  titleClass: 'center aligned',
+        //  dataClass: 'center aligned'
+        //},
         <% for ( i=0; i<attributesArr.length; i++ ) { -%>
           {
             name: '<%- attributesArr[i][0] -%>',
@@ -105,7 +107,7 @@ export default {
     onDelete () {
       if (window.confirm("Do you really want to delete <%- namePlLc -%> of ids '" + this.$refs.vuetable.selectedTo.join("; ") + "'?")) {
         var t = this;
-        var url = this.$baseUrl() + '/<%- nameLc -%>/' + this.$refs.vuetable.selectedTo.join("/")
+        var url = this.$baseUrl()() + '/<%- nameLc -%>/' + this.$refs.vuetable.selectedTo.join("/")
         axios.delete(url).then(function (response) {
           t.$refs.vuetable.refresh()
         }).catch(function (error) {
@@ -115,7 +117,7 @@ export default {
     },
     onCsvExport () {
       var t = this;
-      var url = this.$baseUrl() + '/<%- namePlLc -%>/example_csv' + '?array=[' + this.$refs.vuetable.selectedTo.join(",") + ']'
+      var url = this.$baseUrl()() + '/<%- namePlLc -%>/example_csv' + '?array=[' + this.$refs.vuetable.selectedTo.join(",") + ']'
       
       axios.get(url).then(function (response) {
 

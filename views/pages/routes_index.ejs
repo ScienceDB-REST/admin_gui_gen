@@ -1,20 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
 <%  for ( i=0; i<models.length; i++ ) { -%>
 import <%- models[i].namePlLc -%> from '@/components/<%- models[i].namePlLc -%>'
 import <%- models[i].name -%>Create from '@/components/<%- models[i].name -%>CreateForm'
 import <%- models[i].name -%>Edit from '@/components/<%- models[i].name -%>EditForm'
+import <%- models[i].name -%>UploadCsv from '@/components/<%- models[i].name -%>UploadCsvForm'
 <%  } -%>
 
 Vue.use(Router)
 
 var routes = [
-    {
-      path: '/',
-      name: 'Hello',
-      component: Hello
-    },
     <%  for ( i=0; i<models.length; i++ ) { -%>
     {
       path: '/<%- models[i].namePlLc -%>',
@@ -25,6 +20,11 @@ var routes = [
       path: '/<%- models[i].nameLc -%>/:id',
       name: '<%- models[i].name -%>Edit',
       component: <%- models[i].name -%>Edit,
+    },
+    {
+      path: '/<%- models[i].namePlLc -%>/upload_csv',
+      name: '<%- models[i].name -%>UploadCsv',
+      component: <%- models[i].name -%>UploadCsv
     },
     {
       path: '/<%- models[i].nameLc -%>',

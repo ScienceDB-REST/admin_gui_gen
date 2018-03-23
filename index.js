@@ -24,12 +24,15 @@ program
   .option(
     '--belongsTos <ModelName1:foreignKey:id:label:subLabel, ModelName2:foreignKey:id:label:subLabel, ...>',
     'ModelName as instantiated in Sequelize, foreignKey name of the column holding the belongsTo foreignKey, id name of the primaryKey column in the target model, label name of the column to be used as a display name, subLabel optional name of the column in the target model to be used as a sub-label'
+  ).option(
+    '--hasManys <relationName1:label:subLabel, relationName2:label:subLabel, ...>',
+    'Used to DISPLAY relations of type one-to-many or many-to-many. Will not provide create or edit support for these relations. "detailView" will display relations scrollable.'
   ).parse(process.argv);
 
 // Do your job:
 var directory = program.args[0]
-console.log('directory: %s name: %s attributes: %s belongsTos: %s',
-  directory, program.name, program.attributes, program.belongsTos);
+console.log('\nRender GUI components for arguments:\ndirectory: %s name: %s attributes: %s belongsTos: %s hasManys: %s',
+  directory, program.name, program.attributes, program.belongsTos, program.hasManys);
 
 var ejbOpts = {
   baseUrl: program.baseUrl,
@@ -39,7 +42,8 @@ var ejbOpts = {
   namePlLc: inflection.pluralize(program.name).toLowerCase(),
   attributesArr: funks.attributesArray(program.attributes),
   typeAttributes: funks.typeAttributes(funks.attributesArray(program.attributes)),
-  belongsTosArr: funks.parseBelongsTos(program.belongsTos)
+  belongsTosArr: funks.parseBelongsTos(program.belongsTos),
+  hasManysArr: funks.parseHasManys(program.hasManys)
 }
 var componentsDir = path.resolve(directory, "src", "components")
 // table
@@ -53,12 +57,15 @@ funks.renderToFile(customActions, 'customActions', ejbOpts)
 var details = path.resolve(componentsDir, program.name + 'DetailRow.vue')
 funks.renderToFile(details, 'detailView', ejbOpts)
 // form elements
-console.log("belongsTosArr: " + JSON.stringify(ejbOpts.belongsTosArr));
+// console.log("belongsTosArr: " + JSON.stringify(ejbOpts.belongsTosArr));
 var formElmns = path.resolve(componentsDir, program.name + 'FormElemns.vue')
 funks.renderToFile(formElmns, 'formElements', ejbOpts)
 // create form
 var createForm = path.resolve(componentsDir, program.name + 'CreateForm.vue')
 funks.renderToFile(createForm, 'createForm', ejbOpts)
+// upload CSV / XLSX form
+var uploadCsvForm = path.resolve(componentsDir, program.name + 'UploadCsvForm.vue')
+funks.renderToFile(uploadCsvForm, 'uploadCsvForm', ejbOpts)
 // edit form
 var editForm = path.resolve(componentsDir, program.name + 'EditForm.vue')
 funks.renderToFile(editForm, 'editForm', ejbOpts)
@@ -84,4 +91,4 @@ funks.copyFileIfNotExists(path.resolve(__dirname, 'foreignKeyFormElement.vue'),
 var addNewPath = path.resolve(directory, 'src', 'components', 'AddNewEntityButton.vue')
 funks.copyFileIfNotExists(path.resolve(__dirname, 'AddNewEntityButton.vue'), addNewPath)
 // DONE
-console.log("\nDONE");
+console.log("\nDONE\n");
