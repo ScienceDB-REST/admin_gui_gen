@@ -25,8 +25,8 @@ program
     '--belongsTos <ModelName1:foreignKey:id:label:subLabel, ModelName2:foreignKey:id:label:subLabel, ...>',
     'ModelName as instantiated in Sequelize, foreignKey name of the column holding the belongsTo foreignKey, id name of the primaryKey column in the target model, label name of the column to be used as a display name, subLabel optional name of the column in the target model to be used as a sub-label'
   ).option(
-    '--hasManys <relationName1:label:subLabel, relationName2:label:subLabel, ...>',
-    'Used to DISPLAY relations of type one-to-many or many-to-many. Will not provide create or edit support for these relations. "detailView" will display relations scrollable.'
+    '--hasManys <relationName1:targetModel:label:subLabel, relationName2:targetModel:label:subLabel, ...>',
+    'Used for relations of type one-to-many or many-to-many. Will provide create or edit support for these relations. "detailView" will display relations scrollable.'
   ).parse(process.argv);
 
 // Do your job:
@@ -88,6 +88,14 @@ var forKeyPath = path.resolve(directory, 'src', 'components',
   'foreignKeyFormElement.vue')
 funks.copyFileIfNotExists(path.resolve(__dirname, 'foreignKeyFormElement.vue'),
   forKeyPath)
+var hasManyPath = path.resolve(directory, 'src', 'components',
+  'hasManyFormElemn.vue')
+funks.copyFileIfNotExists(path.resolve(__dirname, 'hasManyFormElemn.vue'),
+  hasManyPath)
+var datePickerPath = path.resolve(directory, 'src', 'components',
+  'datePicker.vue')
+funks.copyFileIfNotExists(path.resolve(__dirname, 'datePicker.vue'),
+  datePickerPath)
 var addNewPath = path.resolve(directory, 'src', 'components', 'AddNewEntityButton.vue')
 funks.copyFileIfNotExists(path.resolve(__dirname, 'AddNewEntityButton.vue'), addNewPath)
 // DONE

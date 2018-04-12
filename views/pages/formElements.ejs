@@ -6,10 +6,11 @@
   <% for ( i=0; i<attributesArr.length; i++ ) { -%>
 
     <div id="<%- nameLc -%>-<%- attributesArr[i][0] -%>-div" class="form-group">
-      <label><%- attributesArr[i][0] -%></label>
-      <input type="text" v-model="<%- nameLc -%>.<%- attributesArr[i][0] -%>" class="form-control"/>
-      <div id="<%- nameLc -%>-<%- attributesArr[i][0] -%>-err" v-if="typeof validationError('<%- attributesArr[i][0] -%>') !== 'undefined'">
-        {{validationError('<%- attributesArr[i][0] -%>').message}}
+      <% let iterAttr = attributesArr[i] -%>
+      <label><%- iterAttr[0] -%></label>
+      <% include ../partials/input %>
+      <div id="<%- nameLc -%>-<%- iterAttr[0] -%>-err" v-if="typeof validationError('<%- iterAttr[0] -%>') !== 'undefined'">
+        {{validationError('<%- iterAttr[0] -%>').message}}
       </div>
     </div>
 
@@ -33,16 +34,44 @@
     </div>
 
   <% } -%>
+
+
+  <% for ( i=0; i<hasManysArr.length; i++ ) { -%>
+    <% var manyRel = hasManysArr[i] -%>
+
+    <div id="<%- nameLc -%>-<%- manyRel.relationName -%>-div" class="form-group">
+      <label><%- manyRel.relationName -%></label>
+      <has-many-form-element
+        :associatedElements.sync="metabolite_measurement.samples"
+        :searchUrl="this.$baseUrl() + '<%- manyRel.targetModelPlLc -%>'"
+        label="<%- manyRel.label -%>"
+        subLabel="<%- manyRel.subLabel -%>"
+        valueKey="id">
+      </has-many-form-element>
+    </div>
+
+  <% } -%>
+
   
   </div>
 </template>
 
 <script>
-<% if (typeof belongsTosArr !== 'undefined' && belongsTosArr.length > 0) { -%>
+<% if (typeof belongsTosArr !== undefined && belongsTosArr.length > 0 ||
+  typeof hasManysArr !== undefined && hasManysArr.length > 0) { -%>
 import Vue from 'vue'
+<% } -%>
+
+<% if (typeof belongsTosArr !== 'undefined' && belongsTosArr.length > 0) { -%>
 import foreignKeyFormElement from './foreignKeyFormElement.vue'
 
 Vue.component('foreign-key-form-element', foreignKeyFormElement)
+<% } -%>
+
+<% if (typeof hasManysArr !== 'undefined' && hasManysArr.length > 0) { -%>
+import hasManyFormElemn from './hasManyFormElemn.vue'
+
+Vue.component('has-many-form-element', hasManyFormElemn)
 <% } -%>
 
 export default {
@@ -72,6 +101,15 @@ export default {
         return el.path === modelField
       })
     }
-  }
+  },
+	mounted: function() {
+    let el = this;
+    $(document).ready(function(){
+      $('.datepicker').datepicker({
+        format: el.$defaultDateFormat(),
+        dateFormat: el.$defaultDateFormat()
+      })
+    })
+	}
 }
 </script>

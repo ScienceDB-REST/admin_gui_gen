@@ -2,30 +2,31 @@ var unique = require('array-unique');
 var exports = module.exports = {};
 var fs = require('fs-extra');
 var inflection = require('inflection')
+const {promisify} = require('util');
+const ejsRenderFile = promisify( ejs.renderFile )
 
 // Render EJB template
-exports.renderTemplate = function(templateName, options) {
-  return ejs.renderFile(__dirname + '/views/pages/' + templateName +
-    '.ejs', options, {},
-    function(err, str) {
-      if (err) {
-        console.log("Error in renderTemplate(...):\n" + err)
-      } else {
-        return str
-      }
-    })
+exports.renderTemplate = async function(templateName, options) {
+  try {
+    return await ejsRenderFile(__dirname + '/views/pages/' + templateName +
+      '.ejs', options, {})
+  } catch (err) {
+    console.log(`ERROR rendering template ${templateName}:\n${err}`);
+  }
 }
 
 // Write rendered string into file
-exports.renderToFile = function(outFile, templateName, options) {
+exports.renderToFile = async function(outFile, templateName, options) {
   // console.log("options:\n" + JSON.stringify(options) + "\n");
-  fs.writeFile(outFile, exports.renderTemplate(templateName, options),
+  let fileCont = await exports.renderTemplate(templateName, options)
+  fs.writeFile(outFile, fileCont,
     function(err) {
       if (err) {
         console.log(err)
         return err
+      } else {
+        console.log("Wrote rendered content into '%s'.", outFile)
       }
-      console.log("Wrote rendered content into '%s'.", outFile)
     })
 }
 
@@ -88,8 +89,9 @@ exports.parseHasManys = function(hasManysStr) {
   return exports.associationsArray(hasManysStr).map(function(rel) {
     return {
       relationName: rel[0],
-      label: rel[1],
-      subLabel: rel[2]
+      targetModelPlLc: inflection.pluralize(rel[1]).toLowerCase(),
+      label: rel[2],
+      subLabel: rel[3],
     }
   })
 }

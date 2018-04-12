@@ -26,16 +26,17 @@
   <% for ( i=0; i<hasManysArr.length; i++ ) { -%>
     <% var rel = hasManysArr[i] -%>
 
-    <div id="<%- nameLc -%>-<%- rel.relationName -%>-div" v-if="rowData.<%- rel.relationName -%>">
-      <div class="inline field">
+    <div id="<%- nameLc -%>-<%- rel.relationName -%>-div" v-if="rowData.<%- rel.relationName -%>" class="row w-100">
+      <div class="col">
         <label><%- rel.relationName -%>:</label>
-        <div style="height: 20%; width: auto; overflow: auto">
-          <ul>
-            <li v-for="x in rowData.<%- rel.relationName -%>">
-              {{x.<%- rel.label -%>}}
-            </li>
-          </ul>
-        </div>
+        <ul class="list-group">
+          <li v-for="x in rowData.<%- rel.relationName -%>" class="list-group-item">
+            {{x.<%- rel.label -%>}}
+            <% if (rel.subLabel !== undefined && rel.subLabel !== '' && rel.subLabel !== null ) {-%>
+                {{x.<%- rel.subLabel -%>}}
+            <% } -%>
+          </li>
+        </ul>
       </div>
     </div>
 
