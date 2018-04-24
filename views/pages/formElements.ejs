@@ -9,7 +9,7 @@
       <% let iterAttr = attributesArr[i] -%>
       <label><%- iterAttr[0] -%></label>
       <% include ../partials/input %>
-      <div id="<%- nameLc -%>-<%- iterAttr[0] -%>-err" v-if="typeof validationError('<%- iterAttr[0] -%>') !== 'undefined'">
+      <div id="<%- nameLc -%>-<%- iterAttr[0] -%>-err" v-if="validationError('<%- iterAttr[0] -%>')" class="alert alert-danger">
         {{validationError('<%- iterAttr[0] -%>').message}}
       </div>
     </div>
