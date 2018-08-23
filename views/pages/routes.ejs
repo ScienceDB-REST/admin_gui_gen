@@ -3,8 +3,7 @@ import <%- name -%>Create from '@/components/<%- name -%>CreateForm'
 import <%- name -%>Edit from '@/components/<%- name -%>EditForm'
 import <%- name -%>UploadCsv from '@/components/<%- name -%>UploadCsvForm'
 
-routes = routes.concat(
-  [
+export default [
     {
       path: '/<%- namePlLc -%>',
       name: '<%- namePl -%>',
@@ -26,4 +25,3 @@ routes = routes.concat(
       component: <%- name -%>UploadCsv
     }
   ]
-)

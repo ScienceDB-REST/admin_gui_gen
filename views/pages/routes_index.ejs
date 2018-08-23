@@ -1,43 +1,21 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 <%  for ( i=0; i<models.length; i++ ) { -%>
-import <%- models[i].namePlLc -%> from '@/components/<%- models[i].namePlLc -%>'
-import <%- models[i].name -%>Create from '@/components/<%- models[i].name -%>CreateForm'
-import <%- models[i].name -%>Edit from '@/components/<%- models[i].name -%>EditForm'
-import <%- models[i].name -%>UploadCsv from '@/components/<%- models[i].name -%>UploadCsvForm'
+import <%- models[i].name -%>Routes from './<%- models[i].name -%>Routes'
 <%  } -%>
 
 Vue.use(Router)
 
 var routes = [
-    <%  for ( i=0; i<models.length; i++ ) { -%>
-    {
-      path: '/<%- models[i].namePlLc -%>',
-      name: '<%- models[i].namePl -%>',
-      component: <%- models[i].namePl -%>,
-    },
-    {
-      path: '/<%- models[i].nameLc -%>/:id',
-      name: '<%- models[i].name -%>Edit',
-      component: <%- models[i].name -%>Edit,
-    },
-    {
-      path: '/<%- models[i].namePlLc -%>/upload_csv',
-      name: '<%- models[i].name -%>UploadCsv',
-      component: <%- models[i].name -%>UploadCsv
-    },
-    {
-      path: '/<%- models[i].nameLc -%>',
-      name: '<%- models[i].name -%>Create',
-      component: <%- models[i].name -%>Create,
-    <%  if(i === models.length - 1) { -%>
-    }
-    <%  }else{ -%>
-    },
-    <%  } -%>    
-    <%  } -%>
-  ];
+
+];
+
+  <%for ( i=0; i<models.length; i++ ) { -%>
+    routes.push(...<%- models[i].name -%>Routes);
+  <%  } -%>
 
 export default new Router({
+  mode: 'history',
   routes: routes
 })

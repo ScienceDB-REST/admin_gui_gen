@@ -125,7 +125,7 @@ export default {
     onCsvExport () {
       var t = this;
       var url = this.$baseUrl()() + '/<%- namePlLc -%>/example_csv' + '?array=[' + this.$refs.vuetable.selectedTo.join(",") + ']'
-      
+
       axios.get(url, {
         headers: {
           'authorization': `Bearer ${t.$getAuthToken()}`,
@@ -133,7 +133,7 @@ export default {
         }
       }).then(function (response) {
 
-        var a = document.createElement("a");        
+        var a = document.createElement("a");
         document.body.appendChild(a);
         a.style = "display: none";
         var blob = new Blob([response.data], {type: "octet/stream"});
