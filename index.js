@@ -77,6 +77,9 @@ funks.renderToFile(routesExt, 'routes', ejbOpts)
 var modelsObj = modelsCreated.getSavedModelsNames(program.name, directory);
 var indexRoutesExt = path.resolve(directory, "src", "router", "index.js")
 funks.renderToFile(indexRoutesExt, 'routes_index', modelsObj)
+//sidenav
+var sideNavPath = path.resolve(directory,"src","components","SideNav.vue")
+funks.renderToFile(sideNavPath, 'sideNav', modelsObj)
 // constants
 var constants = path.resolve(directory, "src", "sciencedb-globals.js")
 funks.renderToFile(constants, 'global_constant', ejbOpts)
