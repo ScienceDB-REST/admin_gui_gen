@@ -75,7 +75,7 @@ var routesExt = path.resolve(directory, "src", "router", program.name +
 funks.renderToFile(routesExt, 'routes', ejbOpts)
 // automatically injects models components into routes array (index.js file)
 var modelsObj = modelsCreated.getSavedModelsNames(program.name, directory);
-var indexRoutesExt = path.resolve(directory, "src", "router", "index.js")
+var indexRoutesExt = path.resolve(directory, "src", "router", "routes_index.js")
 funks.renderToFile(indexRoutesExt, 'routes_index', modelsObj)
 //sidenav
 var sideNavPath = path.resolve(directory,"src","components","SideNav.vue")

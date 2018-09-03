@@ -1,21 +1,11 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-
 <%  for ( i=0; i<models.length; i++ ) { -%>
 import <%- models[i].name -%>Routes from './<%- models[i].name -%>Routes'
 <%  } -%>
 
-Vue.use(Router)
-
-var routes = [
-
-];
+let child_paths = []
 
   <%for ( i=0; i<models.length; i++ ) { -%>
-    routes.push(...<%- models[i].name -%>Routes);
+    child_paths.push(...<%- models[i].name -%>Routes)
   <%  } -%>
 
-export default new Router({
-  mode: 'history',
-  routes: routes
-})
+export default child_paths
