@@ -80,7 +80,7 @@ fs.readdirSync(program.jsonFiles).forEach( async (json_file) =>{
    funks.copyFileIfNotExists(path.resolve(__dirname, 'AddNewEntityButton.vue'), addNewPath)
 
    //automatically injects models components into routes array (routes_index.js file)
-   let modelsObj = modelsCreated.getSavedModelsNames("specie", directory);
+   let modelsObj = modelsCreated.getSavedModelsNames("", directory);
    let indexRoutesExt = path.resolve(directory, "src", "router", "routes_index.js")
    funks.renderToFile(indexRoutesExt, 'routes_index', modelsObj)
    let sideNavPath = path.resolve(directory,"src","components","SideNav.vue")

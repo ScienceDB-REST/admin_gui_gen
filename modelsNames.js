@@ -21,7 +21,7 @@ exports.getSavedModelsNames = function (newModel, directory) {
         }
     })
 
-    if(!_.includes(models, newModel + "Routes.js")){
+    if(newModel!= "" && !_.includes(models, newModel + "Routes.js")){
         createdModels.push({
             name:newModel,
             nameLc: newModel.toLowerCase(),
