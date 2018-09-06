@@ -19,15 +19,22 @@ exports.renderTemplate = async function(templateName, options) {
 exports.renderToFile = async function(outFile, templateName, options) {
   // console.log("options:\n" + JSON.stringify(options) + "\n");
   let fileCont = await exports.renderTemplate(templateName, options)
-  fs.writeFile(outFile, fileCont,
-    function(err) {
-      if (err) {
-        console.log(err)
-        return err
-      } else {
-        console.log("Wrote rendered content into '%s'.", outFile)
-      }
-    })
+  p = new Promise((resolve, reject) =>{
+
+    fs.writeFile(outFile, fileCont,
+      function(err) {
+        if (err) {
+          console.log(err)
+          reject(err);
+          //return err
+        } else {
+          console.log("Wrote rendered content into '%s'.", outFile)
+          resolve();
+        }
+      })
+  });
+
+  return p;
 }
 
 // Parse input 'attributes' argument into array of arrays:
@@ -98,10 +105,87 @@ exports.parseHasManys = function(hasManysStr) {
 
 // Copies file found under sourcePath to targetPath if and only if target does
 // not exist:
-exports.copyFileIfNotExists = function(sourcePath, targetPath) {
-  fs.stat(targetPath, function(err, stat) {
-    if (err != null) {
-      fs.copySync(sourcePath, targetPath);
-    }
-  })
+exports.copyFileIfNotExists = async function(sourcePath, targetPath) {
+
+    fs.stat(targetPath, function(err, stat) {
+      if (err != null) {
+        fs.copySync(sourcePath, targetPath);
+      }
+    });
+}
+
+parseFile = function(jFile){
+  let data=fs.readFileSync(jFile, 'utf8');
+  let words=JSON.parse(data);
+  return words;
+}
+
+exports.fillOptionsForViews = function(jFile){
+  fileData = parseFile(jFile);
+  let associations = parseAssociationsFromFile(fileData.associations);
+  let opts = {
+    baseUrl: fileData.baseUrl,
+    //check compatibility with name in express_graphql_gen
+    name: fileData.model.toLowerCase(),
+    nameLc: fileData.model.toLowerCase(),
+    namePl: inflection.pluralize(fileData.model.toLowerCase()),
+    namePlLc: inflection.pluralize(fileData.model.toLowerCase()).toLowerCase(),
+    attributesArr: attributesArrayFromFile(fileData.attributes),
+    typeAttributes: exports.typeAttributes(attributesArrayFromFile(fileData.attributes)),
+    belongsTosArr: associations.belongsTos,
+    hasManysArr: associations.hasManys
+  }
+
+  return opts;
+}
+
+attributesArrayFromFile = function(attributes){
+  let attArray = []
+
+  for(attr in attributes){
+    attArray.push([ attr, attributes[attr] ]);
+  }
+
+  return attArray;
+}
+
+parseAssociationsFromFile = function(associations){
+  let assoc = {
+    "belongsTos" : [],
+    "hasManys" : []
+  }
+
+  if(associations!==undefined){
+
+    Object.entries(associations).forEach( ([name, association]) =>{
+      let type = association.type.split("_")[1];
+
+      if(type === "belongsTo"){
+        let bt = {
+          "targetModel": association.target.toLowerCase(),
+          "foreignKey": association.targetKey,
+          "primaryKey" : "id",
+          "label" : name,
+          "sublabel" : undefined,
+          "targetModelLc" : association.target.toLowerCase(),
+          "targetModelPlLc" : inflection.pluralize(association.target).toLowerCase(),
+          "relationName" : name
+        }
+
+        assoc.belongsTos.push(bt);
+      }else if(type==="hasMany" || type==="belongsToMany"){
+        let hm = {
+          "relationName" : name,
+          "targetModelPlLc" : inflection.pluralize(association.target).toLowerCase(),
+          "label" : name,
+          "sublabel" : undefined
+        }
+
+        assoc.hasManys.push(hm);
+      }else{
+        console.log("Association type"+ association.type + "not supported.");
+      }
+    });
+  }
+  return assoc;
 }
