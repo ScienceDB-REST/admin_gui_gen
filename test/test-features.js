@@ -1,5 +1,3 @@
-console.log('Hello test')
-
 const expect = require('chai').expect;
 const testData = require('./test-data');
 ejs = require('ejs');
@@ -8,23 +6,19 @@ path = require('path');
 funks = require('../funks.js');
 modelsCreated = require('../modelsNames.js');
 
-
-testFeatures = function (){
-    describe('Features Test', function(){
-      it('Router index file', function(){
-          fs.readFile( path.resolve(__dirname,'src','router', 'routes_index.js'),'utf8', (err,data)=>{
-            let created_routes = data.replace(/\s/g, '');
-            let test_routes = testData.routes.replace(/\s/g, '');
-            expect(created_routes).to.be.equal(test_routes);
-          });
-      });
-
-    });
+create_directory_for_test = function(path_to_directory){
+  if(!fs.existsSync(path_to_directory))
+  {
+    fs.mkdirSync(path_to_directory);
+  }
 }
 
-  describe('Features Test', function(){
+create_directory_for_test(__dirname+'/generated-data');
+create_directory_for_test(__dirname+'/generated-data/src');
+create_directory_for_test(__dirname+'/generated-data/src/components');
+create_directory_for_test(__dirname+'/generated-data/src/router');
 
-
+describe('Features Test', function(){
     let path_json_files = path.resolve(__dirname, 'test-json-files');
     let promises = []
     fs.readdirSync(path_json_files).forEach( (json_file) =>{
@@ -46,17 +40,27 @@ testFeatures = function (){
         console.log('Written routes and sideNav');
 
       })
-})
-.catch((error)=>{console.log(error); console.log("Routes models were not written properly")});
+    })
+    .catch((error)=>{console.log(error); console.log("Routes models were not written properly")});
 
-it('Router index file', function(done){
-    fs.readFile( path.resolve(__dirname,'generated-data','src','router', 'routes_index.js'),'utf8', (err,data)=>{
-      let created_routes = data.replace(/\s/g, '');
-      let test_routes = testData.routes.replace(/\s/g, '');
-      expect(created_routes).to.be.equal(test_routes);
-      done();
+    //test router file
+    it('Router index file', function(done){
+        fs.readFile( path.resolve(__dirname,'generated-data','src','router', 'routes_index.js'),'utf8', (err,data)=>{
+          let created_routes = data.replace(/\s/g, '');
+          let test_routes = testData.routes.replace(/\s/g, '');
+          expect(created_routes).to.be.equal(test_routes);
+          done();
+        });
     });
+
+    //test navigation bar file
+    it('Side navigation bar file', function(done){
+        fs.readFile( path.resolve(__dirname,'generated-data','src','components', 'SideNav.vue'),'utf8', (err,data)=>{
+          let created_sideNav = data.replace(/\s/g, '');
+          let test_sideNav = testData.sideNav.replace(/\s/g, '');
+          expect(created_sideNav).to.be.equal(test_sideNav);
+          done();
+        });
+    });
+
 });
-
-
-  });
