@@ -61,3 +61,18 @@ export default {
 }
 </style>
 `
+
+module.exports.modelsObj =
+{ models:
+  [ { name: 'project',
+      nameLc: 'project',
+      namePl: 'projects',
+      namePlLc: 'projects' },
+    { name: 'researcher',
+      nameLc: 'researcher',
+      namePl: 'researchers',
+      namePlLc: 'researchers' },
+    { name: 'specie',
+      nameLc: 'specie',
+      namePl: 'species',
+      namePlLc: 'species' } ] }
