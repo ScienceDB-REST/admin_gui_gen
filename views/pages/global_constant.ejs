@@ -1,6 +1,6 @@
 module.exports.install = function(Vue, options) {
   Vue.prototype.$baseUrl = function() {
-    return "http://213.136.88.239:3000"
+    return process.env.MY_SERVER_URL || "http://localhost:3000/graphql";
   }
   Vue.prototype.$defaultDateFormat = function() {
     return "yy-mm-dd"
