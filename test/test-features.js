@@ -1,5 +1,6 @@
 const expect = require('chai').expect;
 const testData = require('./test-data');
+const models = require('./data-models');
 ejs = require('ejs');
 funks = require('../funks.js');
 
@@ -29,3 +30,15 @@ describe('Features Test', function(){
     });
 
 });
+
+describe('GraphQL Queries', function(){
+    let modelsObj = funks.fillOptionsForViews(models.book) ;
+
+    //test router file
+    it('VueTable query',async function(){
+       let file = await funks.renderTemplate('tableView',modelsObj);
+        let created_table = file.replace(/\s/g, '');
+        let test_table = testData.book_table.replace(/\s/g, '');
+        expect(created_table).to.be.equal(test_table);
+    });
+  });

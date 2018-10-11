@@ -114,14 +114,14 @@ exports.copyFileIfNotExists = async function(sourcePath, targetPath) {
     });
 }
 
-parseFile = function(jFile){
+exports.parseFile = function(jFile){
   let data=fs.readFileSync(jFile, 'utf8');
   let words=JSON.parse(data);
   return words;
 }
 
-exports.fillOptionsForViews = function(jFile){
-  fileData = parseFile(jFile);
+exports.fillOptionsForViews = function(fileData){
+  //fileData = parseFile(jFile);
   let associations = parseAssociationsFromFile(fileData.associations);
   let opts = {
     baseUrl: fileData.baseUrl,
@@ -130,6 +130,7 @@ exports.fillOptionsForViews = function(jFile){
     nameLc: fileData.model.toLowerCase(),
     namePl: inflection.pluralize(fileData.model.toLowerCase()),
     namePlLc: inflection.pluralize(fileData.model.toLowerCase()).toLowerCase(),
+    nameCp: inflection.capitalize(fileData.model),
     attributesArr: attributesArrayFromFile(fileData.attributes),
     typeAttributes: exports.typeAttributes(attributesArrayFromFile(fileData.attributes)),
     belongsTosArr: associations.belongsTos,

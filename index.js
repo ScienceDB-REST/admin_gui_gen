@@ -24,7 +24,8 @@ console.log('\nRender GUI components for model in: ', directory);
 let promises = []
 fs.readdirSync(program.jsonFiles).forEach( async (json_file) =>{
 
-  let ejbOpts = funks.fillOptionsForViews(program.jsonFiles + '/'+json_file );
+  let fileData = funks.parseFile(program.jsonFiles + '/'+json_file );
+  let ejbOpts = funks.fillOptionsForViews(fileData);
   console.log("Proccessing ", ejbOpts.name)
   let componentsDir = path.resolve(directory, "src", "components")
   // table

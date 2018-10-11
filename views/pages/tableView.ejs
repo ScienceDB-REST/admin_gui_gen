@@ -7,15 +7,16 @@
       <router-link v-bind:to="'/<%- namePlLc -%>/upload_csv'"><button class="ui primary button">CSV Upload</button></router-link>
     </div>
     <vuetable ref="vuetable"
-      :api-url="this.$baseUrl() + '/<%- namePlLc -%>/vue_table'"
+      :api-url="this.$baseUrl()"
       :fields="fields"
-      pagination-path=""
       :per-page="20"
-      detail-row-component="<%- nameLc -%>-detail-row"
       :appendParams="moreParams"
+      :http-options="{ headers: {Authorization: `bearer ${this.$getAuthToken()}`} }"
+      pagination-path="data.vueTable<%-nameCp-%>"
+      detail-row-component="<%- nameLc -%>-detail-row"
+      data-path="data.vueTable<%-nameCp-%>.data"
       @vuetable:pagination-data="onPaginationData"
       @vuetable:cell-clicked="onCellClicked"
-      :http-options="{ headers: {Authorization: `bearer ${this.$getAuthToken()}`} }"
       @vuetable:load-error="onError"
     ></vuetable>
     <div class="vuetable-pagination ui basic segment grid">
@@ -81,7 +82,9 @@ export default {
           dataClass: 'center aligned'
         }
       ],
-      moreParams: {}
+      moreParams: {
+        query: "{vueTable<%-nameCp-%>{data {id <% for( i=0; i<attributesArr.length; i++ ){-%> <%-attributesArr[i][0] %> <%}-%>}total per_page current_page last_page prev_page_url next_page_url from to}}"
+      }
     }
   },
   methods: {
@@ -97,13 +100,14 @@ export default {
       this.$refs.vuetable.toggleDetailRow(data.id)
     },
     onFilterSet(filterText) {
-      this.moreParams = {
-        'filter': filterText.trim()
-      }
+      this.moreParams [
+        'filter'] = filterText.trim()
       Vue.nextTick(() => this.$refs.vuetable.refresh())
     },
     onFilterReset() {
-      this.moreParams = {}
+      this.moreParams = {
+        query: "{vueTable<%-nameCp-%>{data {id <% for( i=0; i<attributesArr.length; i++ ){-%> <%-attributesArr[i][0] %> <%}-%>}total per_page current_page last_page prev_page_url next_page_url from to}}"
+      }
       Vue.nextTick(() => this.$refs.vuetable.refresh())
     },
     onDelete () {
