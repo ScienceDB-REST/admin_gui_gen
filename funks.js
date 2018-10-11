@@ -126,7 +126,7 @@ exports.fillOptionsForViews = function(jFile){
   let opts = {
     baseUrl: fileData.baseUrl,
     //check compatibility with name in express_graphql_gen
-    name: fileData.model.toLowerCase(),
+    name: fileData.model,
     nameLc: fileData.model.toLowerCase(),
     namePl: inflection.pluralize(fileData.model.toLowerCase()),
     namePlLc: inflection.pluralize(fileData.model.toLowerCase()).toLowerCase(),
@@ -165,8 +165,9 @@ parseAssociationsFromFile = function(associations){
           "targetModel": association.target.toLowerCase(),
           "foreignKey": association.targetKey,
           "primaryKey" : "id",
-          "label" : name,
-          "sublabel" : undefined,
+          "label" : association.label,
+          //sublabel can be undefined
+          "sublabel" : association.sublabel,
           "targetModelLc" : association.target.toLowerCase(),
           "targetModelPlLc" : inflection.pluralize(association.target).toLowerCase(),
           "relationName" : name
@@ -177,12 +178,14 @@ parseAssociationsFromFile = function(associations){
         let hm = {
           "relationName" : name,
           "targetModelPlLc" : inflection.pluralize(association.target).toLowerCase(),
-          "label" : name,
-          "sublabel" : undefined
+          "label" : association.label,
+          //sublabel can be undefined
+          "sublabel" : association.sublabel
         }
 
         assoc.hasManys.push(hm);
       }else{
+        //association hasOne??
         console.log("Association type"+ association.type + "not supported.");
       }
     });
