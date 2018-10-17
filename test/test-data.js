@@ -444,3 +444,17 @@ export default {
 }
 </script>
 `
+module.exports.DogRequests = `
+import requestGraphql from './request'
+
+export default {
+
+  addDogQuery : function({url, variables, token}){
+      let query = \`mutation addDog($name:String $breed:String $personId:Int $researcherId:Int ){
+        addDog(name:$name breed:$breed personId:$personId researcherId:$researcherId )
+        { id name breed }
+      }\`
+      return requestGraphql({url, query, variables, token});
+    }
+}
+`

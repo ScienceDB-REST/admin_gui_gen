@@ -66,3 +66,15 @@ describe('GraphQL Queries', function(){
         expect(created_formElement).to.be.equal(test_formElement);
     });
   });
+
+  describe('GraphQl Requests ', function(){
+    let modelsObj = funks.fillOptionsForViews(models.dog) ;
+
+    //test router file
+    it('Add Request - dog',async function(){
+       let file = await funks.renderTemplate('graphqlRequests',modelsObj);
+        let created_requests = file.replace(/\s/g, '');
+        let test_requests = testData.DogRequests.replace(/\s/g, '');
+        expect(created_requests).to.be.equal(test_requests);
+    });
+  });
