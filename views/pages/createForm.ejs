@@ -18,6 +18,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import <%- name -%>FormElemns from './<%- name -%>FormElemns.vue'
+import queries from '../requests/<%- nameLc -%>'
 
 Vue.component('<%- nameLc -%>-form-elemns', <%- name -%>FormElemns)
 
@@ -33,13 +34,9 @@ export default {
   methods: {
     onSubmit() {
       var t = this;
-      var url = this.$baseUrl() + '/<%- namePlLc -%>'
-      axios.post(url, t.<%- nameLc -%>, {
-          headers: {
-            'authorization': `Bearer ${t.$getAuthToken()}`,
-            'Accept': 'application/json'
-          }
-        }).then(function(response) {
+      var url = this.$baseUrl()
+      queries.add<%- nameCp -%>Query({url:url, variables: t.<%- nameLc -%>, token: t.$getAuthToken()})
+      .then(function(response) {
         t.$router.push('/<%- namePlLc -%>')
       }).catch(function(res) {
         if (res.response && res.response.data && res.response.data.errors) {

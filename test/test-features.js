@@ -42,3 +42,27 @@ describe('GraphQL Queries', function(){
         expect(created_table).to.be.equal(test_table);
     });
   });
+
+  describe('FormElementVue ', function(){
+      let modelsObj = funks.fillOptionsForViews(models.dog) ;
+
+      //test router file
+      it('DogFormElemns - onlyBelongsTo',async function(){
+         let file = await funks.renderTemplate('formElements',modelsObj);
+          let created_formElement = file.replace(/\s/g, '');
+          let test_formElement = testData.DogFormElem.replace(/\s/g, '');
+          expect(created_formElement).to.be.equal(test_formElement);
+      });
+    });
+
+  describe('CreateForm ', function(){
+    let modelsObj = funks.fillOptionsForViews(models.dog) ;
+
+    //test router file
+    it('DogCreateForm - onlyBelongsTo',async function(){
+       let file = await funks.renderTemplate('createForm',modelsObj);
+        let created_formElement = file.replace(/\s/g, '');
+        let test_formElement = testData.DogCreateForm.replace(/\s/g, '');
+        expect(created_formElement).to.be.equal(test_formElement);
+    });
+  });

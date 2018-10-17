@@ -2,7 +2,7 @@
   <div id="<%- nameLc -%>-form-elemns-div">
 
   <input type="hidden" v-model="<%- nameLc -%>.id"/>
-  
+
   <% for ( i=0; i<attributesArr.length; i++ ) { -%>
 
     <div id="<%- nameLc -%>-<%- attributesArr[i][0] -%>-div" class="form-group">
@@ -22,13 +22,16 @@
     <div id="<%- nameLc -%>-<%- bt.targetModelLc -%>-div" class="form-group">
       <label><%- bt.relationName -%></label>
       <foreign-key-form-element
-        :searchUrl = "this.$baseUrl() + '/<%- bt.targetModelPlLc -%>'"
+        :searchUrl = "this.$baseUrl()"
         v-model:foreignKey="<%- nameLc -%>.<%- bt.foreignKey -%>"
         label="<%- bt.label -%>"
+        <%let sublabel = bt.subLabel ? bt.subLabel : ""%>
         <% if (typeof bt.subLabel !== 'undefined' && bt.subLabel !== null) { -%>
         subLabel="<%- bt.subLabel -%>"
         <% } -%>
         valueKey="<%- bt.primaryKey -%>"
+        query= "{ <%- bt.targetModelPlLc -%> {id <%- bt.label -%> <% sublabel %>}  }"
+        queryName = "<%- bt.targetModelPlLc -%>"
         v-bind:initialInput="<%- bt.targetModelLc -%>InitialLabel">
       </foreign-key-form-element>
     </div>
@@ -52,7 +55,7 @@
 
   <% } -%>
 
-  
+
   </div>
 </template>
 
