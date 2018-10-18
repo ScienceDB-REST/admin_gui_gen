@@ -18,6 +18,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import <%- name -%>FormElemns from './<%- name -%>FormElemns.vue'
+import queries from '../requests/<%- nameLc -%>'
 
 Vue.component('<%- nameLc -%>-form-elemns', <%- name -%>FormElemns)
 
@@ -40,15 +41,10 @@ export default {
     fetchData() {
       var t = this
       t.error = null
-      if (this.$route.params.id) {
-        axios.get(this.$baseUrl() + '/<%- nameLc -%>/' +
-          this.$route.params.id, {
-          headers: {
-            'authorization': `Bearer ${t.$getAuthToken()}`,
-            'Accept': 'application/json'
-          }
-        }).then(function (response) {
-            t.<%- nameLc -%> = response.data
+      if(this.$route.params.id){
+        queries.readOne<%- nameCp -%>({ url:this.$baseUrl(), variables: {id:this.$route.params.id}, token:t.$getAuthToken()})
+        .then(function (response) {
+            t.<%- nameLc -%> = response.data.data.readOne<%- nameCp -%>
           }, function (err) {
             t.parent.error = err
           })
@@ -56,16 +52,9 @@ export default {
     },
     onSubmit() {
       var t = this;
-      var url = this.$baseUrl() + '/<%- nameLc -%>'
-      if (t.$route.params.id) { 
-        url += '/' + t.$route.params.id
-      }
-      axios.put(url, t.<%- nameLc -%>, {
-        headers: {
-          'authorization': `Bearer ${t.$getAuthToken()}`,
-          'Accept': 'application/json'
-        }
-      }).then(function (response) {
+      var url = this.$baseUrl()
+      queries.update<%-nameCp-%>({url:url, variables:t.<%-nameLc-%>, token: t.$getAuthToken()})
+      .then(function (response) {
         t.$router.push('/<%- namePlLc -%>')
       }).catch( function (res) {
         if (res.response && res.response.data && res.response.data.errors) {

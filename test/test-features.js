@@ -78,3 +78,15 @@ describe('GraphQL Queries', function(){
         expect(created_requests).to.be.equal(test_requests);
     });
   });
+
+  describe('EditForm', function(){
+    let modelsObj = funks.fillOptionsForViews(models.dog) ;
+
+    //test router file
+    it('DogEditForm - onlyBelongsTo',async function(){
+       let file = await funks.renderTemplate('editForm',modelsObj);
+        let created_editForm = file.replace(/\s/g, '');
+        let test_editForm = testData.DogEdit.replace(/\s/g, '');
+        expect(created_editForm).to.be.equal(test_editForm);
+    });
+  });
