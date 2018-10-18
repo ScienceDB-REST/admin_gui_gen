@@ -90,3 +90,15 @@ describe('GraphQL Queries', function(){
         expect(created_editForm).to.be.equal(test_editForm);
     });
   });
+
+  describe('CustomActionsForm', function(){
+    let modelsObj = funks.fillOptionsForViews(models.dog) ;
+
+    //test router file
+    it('Delete in custom actions - dog',async function(){
+       let file = await funks.renderTemplate('customActions',modelsObj);
+        let created_customActions = file.replace(/\s/g, '');
+        let test_customActions = testData.DogCustomActions.replace(/\s/g, '');
+        expect(created_customActions).to.be.equal(test_customActions);
+    });
+  });

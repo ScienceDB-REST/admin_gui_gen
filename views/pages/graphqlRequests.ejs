@@ -35,5 +35,12 @@ export default {
     }`
 
     return requestGraphql({url, query, variables, token});
+  },
+
+  delete<%- nameCp -%> : function({url, variables, token}){
+    let query = `mutation delete<%- nameCp -%>($id:ID!){
+      delete<%- nameCp -%>(id:$id)
+    }`
+    return requestGraphql({url, query, variables, token});
   }
 }
