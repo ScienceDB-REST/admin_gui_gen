@@ -53,6 +53,16 @@ describe('GraphQL Queries', function(){
           let test_formElement = testData.DogFormElem.replace(/\s/g, '');
           expect(created_formElement).to.be.equal(test_formElement);
       });
+
+
+      let modelsObjProject = funks.fillOptionsForViews(models.project) ;
+      it('ProjectFormElemns - hasMany',async function(){
+         let file = await funks.renderTemplate('formElements',modelsObjProject);
+          let created_formElement = file.replace(/\s/g, '');
+          let test_formElement = testData.ProjectForm.replace(/\s/g, '');
+          expect(created_formElement).to.be.equal(test_formElement);
+      });
+
     });
 
   describe('CreateForm ', function(){

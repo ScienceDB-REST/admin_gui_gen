@@ -25,12 +25,13 @@
         :searchUrl = "this.$baseUrl()"
         v-model:foreignKey="<%- nameLc -%>.<%- bt.foreignKey -%>"
         label="<%- bt.label -%>"
-        <%let sublabel = bt.subLabel ? bt.subLabel : ""%>
-        <% if (typeof bt.subLabel !== 'undefined' && bt.subLabel !== null) { -%>
-        subLabel="<%- bt.subLabel -%>"
-        <% } -%>
+        <%let sublabel = ""%>
+        <%if(bt.sublabel){-%>
+        subLabel = "<%-bt.sublabel-%>"
+        <%sublabel = bt.sublabel %>
+        <%}-%>
         valueKey="<%- bt.primaryKey -%>"
-        query= "{ <%- bt.targetModelPlLc -%> {id <%- bt.label -%> <% sublabel %>}  }"
+        query= "{ <%- bt.targetModelPlLc -%> {id <%- bt.label -%> <%- sublabel -%>}  }"
         queryName = "<%- bt.targetModelPlLc -%>"
         v-bind:initialInput="<%- bt.targetModelLc -%>InitialLabel">
       </foreign-key-form-element>
@@ -45,11 +46,18 @@
     <div id="<%- nameLc -%>-<%- manyRel.relationName -%>-div" class="form-group">
       <label><%- manyRel.relationName -%></label>
       <has-many-form-element
-        :associatedElements.sync="metabolite_measurement.samples"
-        :searchUrl="this.$baseUrl() + '<%- manyRel.targetModelPlLc -%>'"
+        :associatedElements.sync="<%- nameLc -%>. <%- manyRel.relationName -%>Filter"
+        :searchUrl="this.$baseUrl()"
         label="<%- manyRel.label -%>"
-        subLabel="<%- manyRel.subLabel -%>"
-        valueKey="id">
+        <%let sublabel = ""%>
+        <%if(manyRel.sublabel){-%>
+        subLabel ="<%-manyRel.sublabel-%>"
+        <%sublabel = manyRel.sublabel %>
+        <%}-%>
+        valueKey="id"
+        query = "{<%- manyRel.relationName -%>{id <%- manyRel.label -%> <%-sublabel-%>} }"
+        queryName = "<%- manyRel.relationName -%>"
+        >
       </has-many-form-element>
     </div>
 
