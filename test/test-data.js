@@ -165,7 +165,7 @@ export default {
         }
       ],
       moreParams: {
-        query: "{vueTableBook{data {id title genre}total per_page current_page last_page prev_page_url next_page_url from to}}"
+      query: \`{vueTableBook{data {id  title genre publisher{name } peopleFilter{firstName  email}} total per_page current_page last_page prev_page_url next_page_url from to}}\`
       }
     }
   },
@@ -188,7 +188,7 @@ export default {
     },
     onFilterReset() {
       this.moreParams = {
-        query: "{vueTableBook{data {id title genre}total per_page current_page last_page prev_page_url next_page_url from to}}"
+        query: \`{vueTableBook{data {id  title genre publisher{name } peopleFilter{firstName  email}} total per_page current_page last_page prev_page_url next_page_url from to}}\`
       }
       Vue.nextTick(() => this.$refs.vuetable.refresh())
     },
@@ -732,6 +732,351 @@ export default {
       })
     })
 	}
+}
+</script>
+`
+module.exports.DogDetailView = `
+<template>
+  <div @click="onClick">
+    <div class="inline field">
+      <label>id: </label>
+      <span>{{rowData.id}}</span>
+    </div>
+          <div class="inline field">
+        <label>name:</label>
+        <span>{{rowData.name}}</span>
+      </div>
+          <div class="inline field">
+        <label>breed:</label>
+        <span>{{rowData.breed}}</span>
+      </div>
+
+
+    <div id="dog-person-div">
+      <div class="inline field">
+        <label>person:</label>
+        <span>{{personInitialLabel}}</span>
+      </div>
+    </div>
+
+
+    <div id="dog-researcher-div">
+      <div class="inline field">
+        <label>researcher:</label>
+        <span>{{researcherInitialLabel}}</span>
+      </div>
+    </div>
+
+
+
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    rowData: {
+      type: Object,
+      required: true
+    },
+    rowIndex: {
+      type: Number
+    }
+  },
+  computed: {
+          personInitialLabel: function () {
+      var x = this.rowData.person
+      if (x !== null && typeof x === 'object' &&
+          x['firstName'] !== null &&
+          typeof x['firstName'] !== 'undefined') {
+        return x['firstName']
+      } else {
+        return ''
+      }
+    }
+        ,
+              researcherInitialLabel: function () {
+      var x = this.rowData.researcher
+      if (x !== null && typeof x === 'object' &&
+          x['firstName'] !== null &&
+          typeof x['firstName'] !== 'undefined') {
+        return x['firstName']
+      } else {
+        return ''
+      }
+    }
+        },
+  methods: {
+    onClick (event) {
+      console.log('my-detail-row: on-click', event.target)
+    }
+  }
+}
+</script>
+`
+
+module.exports.projectDetailView = `
+<template>
+  <div @click="onClick">
+    <div class="inline field">
+      <label>id: </label>
+      <span>{{rowData.id}}</span>
+    </div>
+          <div class="inline field">
+        <label>name:</label>
+        <span>{{rowData.name}}</span>
+      </div>
+          <div class="inline field">
+        <label>description:</label>
+        <span>{{rowData.description}}</span>
+      </div>
+
+
+    <div id="project-specie-div">
+      <div class="inline field">
+        <label>specie:</label>
+        <span>{{specieInitialLabel}}</span>
+      </div>
+    </div>
+
+
+
+    <div id="project-researchers-div" v-if="rowData.researchersFilter" class="row w-100">
+      <div class="col">
+        <label>researchers:</label>
+        <ul class="list-group">
+          <li v-for="x in rowData.researchersFilter" class="list-group-item">
+            {{x.firstName}}
+            {{x.lastName}}
+                      </li>
+        </ul>
+      </div>
+    </div>
+
+
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    rowData: {
+      type: Object,
+      required: true
+    },
+    rowIndex: {
+      type: Number
+    }
+  },
+  computed: {
+          specieInitialLabel: function () {
+      var x = this.rowData.specie
+      if (x !== null && typeof x === 'object' &&
+          x['nombre'] !== null &&
+          typeof x['nombre'] !== 'undefined') {
+        return x['nombre']
+      } else {
+        return ''
+      }
+    }
+        },
+  methods: {
+    onClick (event) {
+      console.log('my-detail-row: on-click', event.target)
+    }
+  }
+}
+</script>
+`
+module.exports.dog_table = `
+<template>
+  <div class="ui container">
+    <filter-bar></filter-bar>
+    <div class="inline field pull-left">
+      <router-link v-bind:to="'dog'"><button class="ui primary button">Add dog</button></router-link>
+      <button class="ui primary button" @click="downloadExampleCsv">CSV Example Table</button>
+      <router-link v-bind:to="'/dogs/upload_csv'"><button class="ui primary button">CSV Upload</button></router-link>
+    </div>
+    <vuetable ref="vuetable"
+      :api-url="this.$baseUrl()"
+      :fields="fields"
+      :per-page="20"
+      :appendParams="moreParams"
+      :http-options="{ headers: {Authorization: \`bearer \${this.$getAuthToken()}\`} }"
+      pagination-path="data.vueTableDog"
+      detail-row-component="dog-detail-row"
+      data-path="data.vueTableDog.data"
+      @vuetable:pagination-data="onPaginationData"
+      @vuetable:cell-clicked="onCellClicked"
+      @vuetable:load-error="onError"
+    ></vuetable>
+    <div class="vuetable-pagination ui basic segment grid">
+      <vuetable-pagination-info ref="paginationInfo"
+      ></vuetable-pagination-info>
+      <vuetable-pagination ref="pagination"
+        @vuetable-pagination:change-page="onChangePage"
+      ></vuetable-pagination>
+    </div>
+  </div>
+</template>
+
+<script>
+import Vuetable from 'vuetable-2/src/components/Vuetable.vue'
+import VuetablePagination from 'vuetable-2/src/components/VuetablePagination.vue'
+import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo.vue'
+import DogCustomActions from './DogCustomActions.vue'
+import DogDetailRow from './DogDetailRow.vue'
+import FilterBar from './FilterBar.vue'
+
+import axios from 'axios'
+
+import Vue from 'vue'
+import VueEvents from 'vue-events'
+Vue.use(VueEvents)
+
+Vue.component('dog-custom-actions', DogCustomActions)
+Vue.component('dog-detail-row', DogDetailRow)
+Vue.component('filter-bar', FilterBar)
+
+export default {
+  components: {
+    Vuetable,
+    VuetablePagination,
+    VuetablePaginationInfo,
+    DogDetailRow
+  },
+  data() {
+    return {
+      fields: [{
+          name: 'id',
+          title: 'ID',
+          titleClass: 'center aligned',
+          dataClass: 'right aligned'
+        },
+        // For now, we do not render checkboxes, as we yet have to provide
+        // functions for selected rows.
+        //{
+        //  name: '__checkbox',
+        //  titleClass: 'center aligned',
+        //  dataClass: 'center aligned'
+        //},
+                  {
+            name: 'name',
+            sortField: 'name'
+          },
+                  {
+            name: 'breed',
+            sortField: 'breed'
+          },
+                {
+          name: '__component:dog-custom-actions',
+          title: 'Actions',
+          titleClass: 'center aligned',
+          dataClass: 'center aligned'
+        }
+      ],
+      moreParams: {
+        query: \`{vueTableDog{data {id  name  breed person{firstName} researcher{firstName}}total per_page current_page last_page prev_page_url next_page_url from to}}\`
+      }
+    }
+  },
+  methods: {
+    onPaginationData(paginationData) {
+      this.$refs.pagination.setPaginationData(paginationData)
+      this.$refs.paginationInfo.setPaginationData(paginationData)
+    },
+    onChangePage(page) {
+      this.$refs.vuetable.changePage(page)
+    },
+    onCellClicked(data, field, event) {
+      console.log('cellClicked: ', field.name)
+      this.$refs.vuetable.toggleDetailRow(data.id)
+    },
+    onFilterSet(filterText) {
+      this.moreParams [
+        'filter'] = filterText.trim()
+      Vue.nextTick(() => this.$refs.vuetable.refresh())
+    },
+    onFilterReset() {
+      this.moreParams = {
+        query: \`{vueTableDog{data {id  name  breed person{firstName} researcher{firstName} }total per_page current_page last_page prev_page_url next_page_url from to}}\`
+      }
+      Vue.nextTick(() => this.$refs.vuetable.refresh())
+    },
+    onDelete () {
+      if (window.confirm("Do you really want to delete dogs of ids '" + this.$refs.vuetable.selectedTo.join("; ") + "'?")) {
+        var t = this;
+        var url = this.$baseUrl()() + '/dog/' + this.$refs.vuetable.selectedTo.join("/")
+        axios.delete(url, {
+          headers: {
+            'authorization': \`Bearer \${t.$getAuthToken()}\`,
+            'Accept': 'application/json'
+          }
+        }).then(function (response) {
+          t.$refs.vuetable.refresh()
+        }).catch(function (error) {
+          t.error = error
+        })
+      }
+    },
+    onCsvExport () {
+      var t = this;
+      var url = this.$baseUrl()() + '/dogs/example_csv' + '?array=[' + this.$refs.vuetable.selectedTo.join(",") + ']'
+
+      axios.get(url, {
+        headers: {
+          'authorization': \`Bearer \${t.$getAuthToken()}\`,
+          'Accept': 'application/json'
+        }
+      }).then(function (response) {
+
+        var a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = "display: none";
+        var blob = new Blob([response.data], {type: "octet/stream"});
+        var url = window.URL.createObjectURL(blob);
+        a.href = url;
+        a.download = 'dog' + '.csv';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }).catch(function (error) {
+        t.error = error
+      })
+    },
+    downloadExampleCsv: function() {
+      var t = this
+      axios.get(t.$baseUrl() + '/dogs/example_csv', {
+        headers: {
+          'authorization': \`Bearer \${t.$getAuthToken()}\`,
+          'Accept': 'application/json'
+        },
+        responseType: 'blob'
+      }).then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'dogs.csv');
+        document.body.appendChild(link);
+        link.click();
+      }).catch(res => {
+        var err = (res && res.response && res.response.data && res.response
+          .data.message ?
+          res.response.data.message : res)
+        t.$root.$emit('globalError', err)
+        t.$router.push('/')
+      })
+    },
+    onError: function(res) {
+      var err = (res && res.response && res.response.data && res.response.data.message ?
+        res.response.data.message : res)
+      this.$root.$emit('globalError', err)
+      this.$router.push('/')
+    }
+  },
+  mounted() {
+    this.$events.$on('filter-set', eventData => this.onFilterSet(eventData))
+    this.$events.$on('filter-reset', e => this.onFilterReset())
+  }
 }
 </script>
 `

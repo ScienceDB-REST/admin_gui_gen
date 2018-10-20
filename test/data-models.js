@@ -13,17 +13,19 @@ module.exports.book = {
           "targetKey" : "personId",
           "sourceKey" : "bookId",
           "keysIn" : "books_to_people",
-          "targetStorageType" : "sql"
+          "targetStorageType" : "sql",
+          "label" : "firstName",
+          "sublabel" : "email"
         },
       "publisher" : {
         "type" : "cross_belongsTo",
         "target" : "Publisher",
         "targetKey" : "publisherId",
-        "targetStorageType" : "webservice"
+        "targetStorageType" : "webservice",
+        "label" : "name"
         }
   }
 }
-
 module.exports.dog = {
   "model" : "Dog",
   "storageType" : "Sql",

@@ -26,14 +26,14 @@
   <% for ( i=0; i<hasManysArr.length; i++ ) { -%>
     <% var rel = hasManysArr[i] -%>
 
-    <div id="<%- nameLc -%>-<%- rel.relationName -%>-div" v-if="rowData.<%- rel.relationName -%>" class="row w-100">
+    <div id="<%- nameLc -%>-<%- rel.relationName -%>-div" v-if="rowData.<%- rel.relationName -%>Filter" class="row w-100">
       <div class="col">
         <label><%- rel.relationName -%>:</label>
         <ul class="list-group">
-          <li v-for="x in rowData.<%- rel.relationName -%>" class="list-group-item">
+          <li v-for="x in rowData.<%- rel.relationName -%>Filter" class="list-group-item">
             {{x.<%- rel.label -%>}}
-            <% if (rel.subLabel !== undefined && rel.subLabel !== '' && rel.subLabel !== null ) {-%>
-                {{x.<%- rel.subLabel -%>}}
+            <% if (rel.sublabel !== undefined && rel.sublabel !== '' && rel.sublabel !== null ) {-%>
+                {{x.<%- rel.sublabel -%>}}
             <% } -%>
           </li>
         </ul>

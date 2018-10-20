@@ -31,22 +31,30 @@ describe('Features Test', function(){
 
 });
 
-describe('GraphQL Queries', function(){
+describe('VueTable GraphQl Query', function(){
     let modelsObj = funks.fillOptionsForViews(models.book) ;
 
-    //test router file
-    it('VueTable query',async function(){
+    it('VueTable  - book',async function(){
        let file = await funks.renderTemplate('tableView',modelsObj);
         let created_table = file.replace(/\s/g, '');
         let test_table = testData.book_table.replace(/\s/g, '');
         expect(created_table).to.be.equal(test_table);
     });
+
+    let modelsObjDog = funks.fillOptionsForViews(models.dog) ;
+
+    it('VueTable  - dog',async function(){
+       let file = await funks.renderTemplate('tableView',modelsObjDog);
+        let created_table = file.replace(/\s/g, '');
+        let test_table = testData.dog_table.replace(/\s/g, '');
+        expect(created_table).to.be.equal(test_table);
+    });
+
   });
 
   describe('FormElementVue ', function(){
       let modelsObj = funks.fillOptionsForViews(models.dog) ;
 
-      //test router file
       it('DogFormElemns - onlyBelongsTo',async function(){
          let file = await funks.renderTemplate('formElements',modelsObj);
           let created_formElement = file.replace(/\s/g, '');
@@ -68,7 +76,6 @@ describe('GraphQL Queries', function(){
   describe('CreateForm ', function(){
     let modelsObj = funks.fillOptionsForViews(models.dog) ;
 
-    //test router file
     it('DogCreateForm - onlyBelongsTo',async function(){
        let file = await funks.renderTemplate('createForm',modelsObj);
         let created_formElement = file.replace(/\s/g, '');
@@ -80,7 +87,6 @@ describe('GraphQL Queries', function(){
   describe('GraphQl Requests ', function(){
     let modelsObj = funks.fillOptionsForViews(models.dog) ;
 
-    //test router file
     it('Add Request - dog',async function(){
        let file = await funks.renderTemplate('graphqlRequests',modelsObj);
         let created_requests = file.replace(/\s/g, '');
@@ -92,7 +98,6 @@ describe('GraphQL Queries', function(){
   describe('EditForm', function(){
     let modelsObj = funks.fillOptionsForViews(models.dog) ;
 
-    //test router file
     it('DogEditForm - onlyBelongsTo',async function(){
        let file = await funks.renderTemplate('editForm',modelsObj);
         let created_editForm = file.replace(/\s/g, '');
@@ -104,11 +109,30 @@ describe('GraphQL Queries', function(){
   describe('CustomActionsForm', function(){
     let modelsObj = funks.fillOptionsForViews(models.dog) ;
 
-    //test router file
     it('Delete in custom actions - dog',async function(){
        let file = await funks.renderTemplate('customActions',modelsObj);
         let created_customActions = file.replace(/\s/g, '');
         let test_customActions = testData.DogCustomActions.replace(/\s/g, '');
         expect(created_customActions).to.be.equal(test_customActions);
+    });
+  });
+
+  describe('DetailViewForm', function(){
+    let modelsObj = funks.fillOptionsForViews(models.dog) ;
+
+    it('Only belongsTo - dog',async function(){
+       let file = await funks.renderTemplate('detailView',modelsObj);
+        let created_detailView = file.replace(/\s/g, '');
+        let test_detailView = testData.DogDetailView.replace(/\s/g, '');
+        expect(created_detailView).to.be.equal(test_detailView);
+    });
+
+    let modelsObjProject = funks.fillOptionsForViews(models.project) ;
+
+    it('hasMany - project',async function(){
+       let file = await funks.renderTemplate('detailView',modelsObjProject);
+        let created_detailView = file.replace(/\s/g, '');
+        let test_detailView = testData.projectDetailView.replace(/\s/g, '');
+        expect(created_detailView).to.be.equal(test_detailView);
     });
   });
