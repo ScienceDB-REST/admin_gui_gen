@@ -8,7 +8,7 @@
         param="filter"
         init-value=""
         v-bind:anchor="label"
-        :label="parseSubabel"
+        :label="parseSublabel"
         :classes="{ wrapper: 'form-wrapper', input: 'form-control', list: 'data-list', item: 'data-list-item' }"
         :on-select="addElement"
         :onInput="onUserInput"
