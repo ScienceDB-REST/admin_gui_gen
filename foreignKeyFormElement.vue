@@ -10,9 +10,8 @@
     :classes="{ wrapper: 'form-wrapper', input: 'form-control', list: 'data-list', item: 'data-list-item' }"
     :on-select="setForeignKey"
     :onInput="onUserInput"
-    :customParams="{query:query}"
     :customHeaders="{ Authorization: `Bearer ${this.$getAuthToken()}` }"
-    :process="accessData"
+    :onShouldGetData="getDataPromise"
   >
   </autocomplete>
 
@@ -29,7 +28,15 @@ Vue.component('autocomplete', Autocomplete)
 export default {
   data() {
     return {
-      parseSublabel : this.subLabel ? this.subLabel : ""
+      parseSublabel : this.subLabel ? this.subLabel : "",
+      search : {
+        operator: "or",
+        search: [{
+          field: this.label,
+          value: {value : "%%"},
+          operator: "like"
+        } ]
+      }
     }
   },
   props: ['searchUrl', 'label', 'subLabel', 'valueKey', 'initialInput', 'foreignKey', 'query', 'queryName'],
@@ -45,11 +52,41 @@ export default {
       if(data === ''){
         this.$emit('input', null)
       }
+      this.search.search[0].value.value = "%"+data+"%";
+      if(this.subLabel){
+        this.search.search[1].value.value = "%"+data+"%";
+      }
     },
-
-    accessData(data){
-      return data.data[this.queryName];
+    addSublabelFilter(){
+      if(this.subLabel){
+        let filter = {
+            field: this.subLabel,
+            value: {value : "%%"},
+            operator: "like"
+        }
+        this.search.search.push(filter);
+      }
+    },
+    getDataPromise(value){
+      return new Promise((resolve, reject) => {
+        let ajax = new XMLHttpRequest();
+        let data = new FormData();
+        ajax.open('POST', this.searchUrl, true);
+        // On Done
+        ajax.addEventListener('loadend', (e) => {
+          const { responseText } = e.target
+          let response = JSON.parse(responseText);
+          // The options to pass in the autocomplete
+          resolve(response.data[this.queryName])
+        });
+        data.append('query', this.query);
+        data.append('variables', JSON.stringify({search:this.search}))
+        ajax.send(data);
+      })
     }
+  },
+  mounted: function(){
+    this.addSublabelFilter();
   }
 }
 </script>

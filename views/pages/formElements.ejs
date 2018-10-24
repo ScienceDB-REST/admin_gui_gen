@@ -49,7 +49,7 @@
         :associatedElements.sync="<%- nameLc -%>. <%- manyRel.relationName -%>Filter"
         :searchUrl="this.$baseUrl()"
         label="<%- manyRel.label -%>"
-        <%let sublabel = ""%>
+        <%let sublabel = ""-%>
         <%if(manyRel.sublabel){-%>
         subLabel ="<%-manyRel.sublabel-%>"
         <%sublabel = manyRel.sublabel %>
