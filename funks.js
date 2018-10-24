@@ -171,6 +171,7 @@ parseAssociationsFromFile = function(associations){
           "sublabel" : association.sublabel,
           "targetModelLc" : association.target.toLowerCase(),
           "targetModelPlLc" : inflection.pluralize(association.target).toLowerCase(),
+          "targeModelCp" : inflection.capitalize(association.target),
           "relationName" : name
         }
 

@@ -309,9 +309,9 @@ module.exports.DogFormElem = `
         :searchUrl = "this.$baseUrl()"
         v-model:foreignKey="dog.personId"
         label="firstName"
-        valueKey="id"
-        query="{people{id firstName }}"
-        queryName="people"
+                valueKey="id"
+        query= "query people($search: searchPersonInput){ people(search:$search) {id firstName}  }"
+        queryName = "people"
         v-bind:initialInput="personInitialLabel">
       </foreign-key-form-element>
     </div>
@@ -323,9 +323,10 @@ module.exports.DogFormElem = `
         :searchUrl = "this.$baseUrl()"
         v-model:foreignKey="dog.researcherId"
         label="firstName"
-        valueKey="id"
-        query="{researchers {id firstName }}"
-        queryName="researchers"
+
+                valueKey="id"
+        query= "query researchers($search: searchResearcherInput){ researchers(search: $search) {id firstName }  }"
+        queryName = "researchers"
         v-bind:initialInput="researcherInitialLabel">
       </foreign-key-form-element>
     </div>
@@ -661,9 +662,9 @@ module.exports.ProjectForm = `
         :searchUrl = "this.$baseUrl()"
         v-model:foreignKey="project.specieId"
         label="nombre"
-        subLabel="nombre_cientifico"
+        subLabel = "nombre_cientifico"
         valueKey="id"
-        query= "{ species {id nombre nombre_cientifico}  }"
+        query= "query species($search: searchSpecieInput){ species(search:$search) {id nombre nombre_cientifico}  }"
         queryName = "species"
         v-bind:initialInput="specieInitialLabel">
       </foreign-key-form-element>

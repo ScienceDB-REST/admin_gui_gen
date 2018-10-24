@@ -25,13 +25,13 @@
         :searchUrl = "this.$baseUrl()"
         v-model:foreignKey="<%- nameLc -%>.<%- bt.foreignKey -%>"
         label="<%- bt.label -%>"
-        <%let sublabel = ""%>
+        <%let sublabel = ""-%>
         <%if(bt.sublabel){-%>
         subLabel = "<%-bt.sublabel-%>"
-        <%sublabel = bt.sublabel %>
+        <%sublabel = bt.sublabel-%>
         <%}-%>
         valueKey="<%- bt.primaryKey -%>"
-        query= "{ <%- bt.targetModelPlLc -%> {id <%- bt.label -%> <%- sublabel -%>}  }"
+        query= "query <%- bt.targetModelPlLc%>($search: search<%-bt.targeModelCp-%>Input){ <%- bt.targetModelPlLc -%>(search:$search) {id <%- bt.label -%> <%- sublabel -%>}  }"
         queryName = "<%- bt.targetModelPlLc -%>"
         v-bind:initialInput="<%- bt.targetModelLc -%>InitialLabel">
       </foreign-key-form-element>
@@ -51,9 +51,8 @@
         label="<%- manyRel.label -%>"
         <%let sublabel = ""-%>
         <%if(manyRel.sublabel){-%>
-        subLabel ="<%-manyRel.sublabel-%>"
-        <%sublabel = manyRel.sublabel %>
-        <%}-%>
+    subLabel ="<%-manyRel.sublabel-%>"
+        <%sublabel = manyRel.sublabel-%><%}-%>
         valueKey="id"
         query = "{<%- manyRel.relationName -%>{id <%- manyRel.label -%> <%-sublabel-%>} }"
         queryName = "<%- manyRel.relationName -%>"
