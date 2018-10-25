@@ -27,7 +27,7 @@
         label="<%- bt.label -%>"
         <%let sublabel = ""-%>
         <%if(bt.sublabel){-%>
-        subLabel = "<%-bt.sublabel-%>"
+    subLabel = "<%-bt.sublabel-%>"
         <%sublabel = bt.sublabel-%>
         <%}-%>
         valueKey="<%- bt.primaryKey -%>"
@@ -54,7 +54,7 @@
     subLabel ="<%-manyRel.sublabel-%>"
         <%sublabel = manyRel.sublabel-%><%}-%>
         valueKey="id"
-        query = "{<%- manyRel.relationName -%>{id <%- manyRel.label -%> <%-sublabel-%>} }"
+        query = "query <%- manyRel.relationName -%>($search: search<%-manyRel.targeModelCp-%>Input) {<%- manyRel.relationName -%>(search:$search){id <%- manyRel.label -%> <%-sublabel-%>} }"
         queryName = "<%- manyRel.relationName -%>"
         >
       </has-many-form-element>

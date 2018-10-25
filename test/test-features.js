@@ -71,6 +71,14 @@ describe('VueTable GraphQl Query', function(){
           expect(created_formElement).to.be.equal(test_formElement);
       });
 
+      let modelsObjBook = funks.fillOptionsForViews(models.book) ;
+      it('BookFormElemns - hasMany',async function(){
+         let file = await funks.renderTemplate('formElements',modelsObjBook);
+          let created_formElement = file.replace(/\s/g, '');
+          let test_formElement = testData.BookForm.replace(/\s/g, '');
+          expect(created_formElement).to.be.equal(test_formElement);
+      });
+
     });
 
   describe('CreateForm ', function(){

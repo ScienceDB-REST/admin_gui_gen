@@ -657,34 +657,35 @@ module.exports.ProjectForm = `
 
 
     <div id="project-specie-div" class="form-group">
-      <label>specie</label>
-      <foreign-key-form-element
-        :searchUrl = "this.$baseUrl()"
-        v-model:foreignKey="project.specieId"
-        label="nombre"
-        subLabel = "nombre_cientifico"
-        valueKey="id"
-        query= "query species($search: searchSpecieInput){ species(search:$search) {id nombre nombre_cientifico}  }"
-        queryName = "species"
-        v-bind:initialInput="specieInitialLabel">
-      </foreign-key-form-element>
-    </div>
+        <label>specie</label>
+        <foreign-key-form-element
+          :searchUrl = "this.$baseUrl()"
+          v-model:foreignKey="project.specieId"
+          label="nombre"
+                      subLabel = "nombre_cientifico"
+                          valueKey="id"
+          query= "query species($search: searchSpecieInput){ species(search:$search) {id nombre nombre_cientifico}  }"
+          queryName = "species"
+          v-bind:initialInput="specieInitialLabel">
+        </foreign-key-form-element>
+      </div>
 
 
 
 
-    <div id="project-researchers-div" class="form-group">
-      <label>researchers</label>
-      <has-many-form-element
-        :associatedElements.sync="project.researchersFilter"
-        :searchUrl="this.$baseUrl()"
-        label="firstName"
-        subLabel="lastName"
-        valueKey="id"
-        query="{researchers {id firstName lastName} }"
-        queryName="researchers">
-      </has-many-form-element>
-    </div>
+      <div id="project-researchers-div" class="form-group">
+        <label>researchers</label>
+        <has-many-form-element
+          :associatedElements.sync="project. researchersFilter"
+          :searchUrl="this.$baseUrl()"
+          label="firstName"
+                      subLabel ="lastName"
+                  valueKey="id"
+          query = "query researchers($search: searchResearcherInput) {researchers(search:$search){id firstName lastName} }"
+          queryName = "researchers"
+          >
+        </has-many-form-element>
+      </div>
 
 
 
@@ -1078,6 +1079,118 @@ export default {
     this.$events.$on('filter-set', eventData => this.onFilterSet(eventData))
     this.$events.$on('filter-reset', e => this.onFilterReset())
   }
+}
+</script>
+`
+module.exports.BookForm = `
+<template>
+  <div id="book-form-elemns-div">
+
+  <input type="hidden" v-model="book.id"/>
+
+
+    <div id="book-title-div" class="form-group">
+            <label>title</label>
+
+  <input type="text" v-model="book.title" class="form-control"/>
+
+
+      <div id="book-title-err" v-if="validationError('title')" class="alert alert-danger">
+        {{validationError('title').message}}
+      </div>
+    </div>
+
+
+    <div id="book-genre-div" class="form-group">
+            <label>genre</label>
+
+  <input type="text" v-model="book.genre" class="form-control"/>
+
+
+      <div id="book-genre-err" v-if="validationError('genre')" class="alert alert-danger">
+        {{validationError('genre').message}}
+      </div>
+    </div>
+
+
+
+    <div id="book-publisher-div" class="form-group">
+      <label>publisher</label>
+      <foreign-key-form-element
+        :searchUrl = "this.$baseUrl()"
+        v-model:foreignKey="book.publisherId"
+        label="name"
+        valueKey="id"
+        query= "query publishers($search: searchPublisherInput){ publishers(search:$search) {id name }  }"
+        queryName = "publishers"
+        v-bind:initialInput="publisherInitialLabel">
+      </foreign-key-form-element>
+    </div>
+
+
+
+
+    <div id="book-people-div" class="form-group">
+      <label>people</label>
+      <has-many-form-element
+        :associatedElements.sync="book. peopleFilter"
+        :searchUrl="this.$baseUrl()"
+        label="firstName"
+        subLabel ="email"
+        valueKey="id"
+        query = "query people($search: searchPersonInput){people(search:$search){id firstName email} }"
+        queryName = "people"
+        >
+      </has-many-form-element>
+    </div>
+
+
+
+  </div>
+</template>
+
+<script>
+import Vue from 'vue'
+
+import foreignKeyFormElement from './foreignKeyFormElement.vue'
+
+Vue.component('foreign-key-form-element', foreignKeyFormElement)
+
+import hasManyFormElemn from './hasManyFormElemn.vue'
+
+Vue.component('has-many-form-element', hasManyFormElemn)
+
+export default {
+  props: [ 'book', 'errors' ],
+  computed: {
+          publisherInitialLabel: function () {
+      var x = this.book.publisher
+      if (x !== null && typeof x === 'object' &&
+          x['name'] !== null &&
+          typeof x['name'] !== 'undefined') {
+        return x['name']
+      } else {
+        return ''
+      }
+    }
+        },
+  methods: {
+    validationError(modelField) {
+      if (this.errors == null) return false;
+      return this.errors.find(function (el) {
+        return el.path === modelField
+      })
+    }
+  },
+	mounted: function() {
+    let el = this;
+    $(document).ready(function(){
+      $('.datepicker').datepicker({
+        format: el.$defaultDateFormat(),
+        dateFormat: el.$defaultDateFormat()
+      })
+    })
+	}
 }
 </script>
 `

@@ -180,6 +180,7 @@ parseAssociationsFromFile = function(associations){
         let hm = {
           "relationName" : name,
           "targetModelPlLc" : inflection.pluralize(association.target).toLowerCase(),
+          "targeModelCp" : inflection.capitalize(association.target),
           "label" : association.label,
           //sublabel can be undefined
           "sublabel" : association.sublabel
