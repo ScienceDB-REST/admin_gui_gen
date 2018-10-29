@@ -46,7 +46,7 @@
     <div id="<%- nameLc -%>-<%- manyRel.relationName -%>-div" class="form-group">
       <label><%- manyRel.relationName -%></label>
       <has-many-form-element
-        :associatedElements.sync="<%- nameLc -%>. <%- manyRel.relationName -%>Filter"
+        :associatedElements.sync="<%- nameLc -%>.<%- manyRel.relationName -%>Filter"
         :searchUrl="this.$baseUrl()"
         label="<%- manyRel.label -%>"
         <%let sublabel = ""-%>

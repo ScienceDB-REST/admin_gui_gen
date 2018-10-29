@@ -676,7 +676,7 @@ module.exports.ProjectForm = `
       <div id="project-researchers-div" class="form-group">
         <label>researchers</label>
         <has-many-form-element
-          :associatedElements.sync="project. researchersFilter"
+          :associatedElements.sync="project.researchersFilter"
           :searchUrl="this.$baseUrl()"
           label="firstName"
                       subLabel ="lastName"
@@ -1133,7 +1133,7 @@ module.exports.BookForm = `
     <div id="book-people-div" class="form-group">
       <label>people</label>
       <has-many-form-element
-        :associatedElements.sync="book. peopleFilter"
+        :associatedElements.sync="book.peopleFilter"
         :searchUrl="this.$baseUrl()"
         label="firstName"
         subLabel ="email"
