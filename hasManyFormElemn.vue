@@ -12,9 +12,8 @@
         :classes="{ wrapper: 'form-wrapper', input: 'form-control', list: 'data-list', item: 'data-list-item' }"
         :on-select="addElement"
         :onInput="onUserInput"
-        :customParams="{query:query}"
         :customHeaders="{ Authorization: `Bearer ${this.$getAuthToken()}` }"
-        :process="accessData"
+        :onShouldGetData="getDataPromise"
       >
       </autocomplete>
     </div>
@@ -43,7 +42,15 @@ Vue.component('autocomplete', Autocomplete)
 export default {
   data() {
     return {
-      parseSublabel : this.subLabel ? this.subLabel : ""
+      parseSublabel : this.subLabel ? this.subLabel : "",
+      search : {
+        operator: "or",
+        search: [{
+          field: this.label,
+          value: {value : "%%"},
+          operator: "like"
+        } ]
+      }
     }
   },
   props: ['associatedElements', 'searchUrl', 'label', 'subLabel', 'valueKey','query','queryName'],
@@ -76,13 +83,13 @@ export default {
     },
 
     addSublabelFilter(){
-    if(this.subLabel){
-      let filter = {
-          field: this.subLabel,
-          value: {value : "%%"},
-          operator: "like"
+      if(this.subLabel){
+        let filter = {
+            field: this.subLabel,
+            value: {value : "%%"},
+            operator: "like"
         }
-      this.search.search.push(filter);
+        this.search.search.push(filter);
       }
     },
     getDataPromise(value){
