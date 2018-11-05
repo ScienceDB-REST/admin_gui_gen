@@ -83,11 +83,18 @@ describe('VueTable GraphQl Query', function(){
 
   describe('CreateForm ', function(){
     let modelsObj = funks.fillOptionsForViews(models.dog) ;
-
     it('DogCreateForm - onlyBelongsTo',async function(){
        let file = await funks.renderTemplate('createForm',modelsObj);
         let created_formElement = file.replace(/\s/g, '');
         let test_formElement = testData.DogCreateForm.replace(/\s/g, '');
+        expect(created_formElement).to.be.equal(test_formElement);
+    });
+
+    let modelsObjPerson = funks.fillOptionsForViews(models.person) ;
+    it('PersonCreateForm - create with associated items',async function(){
+       let file = await funks.renderTemplate('createForm',modelsObjPerson);
+        let created_formElement = file.replace(/\s/g, '');
+        let test_formElement = testData.PersonCreateForm.replace(/\s/g, '');
         expect(created_formElement).to.be.equal(test_formElement);
     });
   });
@@ -99,6 +106,15 @@ describe('VueTable GraphQl Query', function(){
        let file = await funks.renderTemplate('graphqlRequests',modelsObj);
         let created_requests = file.replace(/\s/g, '');
         let test_requests = testData.DogRequests.replace(/\s/g, '');
+        expect(created_requests).to.be.equal(test_requests);
+    });
+
+    let modelsObjPerson = funks.fillOptionsForViews(models.person) ;
+
+    it('Add Request - person',async function(){
+       let file = await funks.renderTemplate('graphqlRequests',modelsObjPerson);
+        let created_requests = file.replace(/\s/g, '');
+        let test_requests = testData.PersonRequests.replace(/\s/g, '');
         expect(created_requests).to.be.equal(test_requests);
     });
   });

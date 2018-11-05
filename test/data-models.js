@@ -81,3 +81,32 @@ module.exports.project = {
     }
   }
 }
+
+module.exports.person = {
+  "model" : "Person",
+  "storageType" : "SQL",
+  "attributes" : {
+    "firstName" : "String",
+    "lastName" : "String",
+    "email" : "String"
+  },
+  "associations":{
+    "dogs":{
+      "type" : "sql_hasMany",
+      "target" : "Dog",
+      "targetKey" : "personId",
+      "targetStorageType" : "sql",
+      "label": "name"
+    },
+
+    "books":{
+      "type" : "sql_belongsToMany",
+      "target" : "Book",
+      "targetKey" : "bookId",
+      "sourceKey" : "personId",
+      "keysIn" : "books_to_people",
+      "targetStorageType" : "sql",
+      "label" : "title"
+    }
+  }
+}

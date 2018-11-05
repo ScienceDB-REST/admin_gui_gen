@@ -112,7 +112,10 @@ export default {
   },
   mounted: function(){
     this.addSublabelFilter();
-  }
+    //set by default associated items to empty array
+    if(this.associatedElements === undefined){
+      this.$emit('update:associatedElements', []);
+    }
 }
 </script>
 <style>

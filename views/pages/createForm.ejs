@@ -35,6 +35,7 @@ export default {
     onSubmit() {
       var t = this;
       var url = this.$baseUrl()
+      this.getAssociationsIds()
       queries.add<%- nameCp -%>Query({url:url, variables: t.<%- nameLc -%>, token: t.$getAuthToken()})
       .then(function(response) {
         t.$router.push('/<%- namePlLc -%>')
@@ -49,6 +50,16 @@ export default {
           t.$router.push('/')
         }
       })
+    },
+
+    getOnlyIds(array){
+      return array.map((item)=>{ return item.id; });
+    },
+
+    getAssociationsIds(){
+      <%for( i=0; i<hasManysArr.length; i++ ){-%>
+        this.<%- nameLc -%>.<%-hasManysArr[i].relationName%>Filter = this.getOnlyIds(this.<%- nameLc -%>.<%-hasManysArr[i].relationName%>Filter);
+      <%}-%>
     }
   }
 }
