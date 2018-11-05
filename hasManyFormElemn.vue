@@ -116,6 +116,7 @@ export default {
     if(this.associatedElements === undefined){
       this.$emit('update:associatedElements', []);
     }
+  }
 }
 </script>
 <style>
