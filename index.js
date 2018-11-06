@@ -82,6 +82,8 @@ fs.readdirSync(program.jsonFiles).forEach( async (json_file) =>{
      datePickerPath)
    let addNewPath = path.resolve(directory, 'src', 'components', 'AddNewEntityButton.vue')
    funks.copyFileIfNotExists(path.resolve(__dirname, 'AddNewEntityButton.vue'), addNewPath)
+   let scrollPath = path.resolve(directory, 'src', 'components', 'scrollListElement.vue')
+   funks.copyFileIfNotExists(path.resolve(__dirname,'scrollListElement.vue'), scrollPath)
 
    //automatically injects models components into routes array (routes_index.js file)
    let modelsObj = modelsCreated.getSavedModelsNames("", directory);
