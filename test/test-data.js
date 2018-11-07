@@ -689,8 +689,7 @@ module.exports.ProjectForm = `
           label="firstName"
                       subLabel ="lastName"
                   valueKey="id"
-          query = "query researchers($search: searchResearcherInput) {researchers(search:$search){id firstName lastName} }"
-          queryName = "researchers"
+          targetModel="Researcher"        
           >
         </has-many-form-element>
       </div>
@@ -1159,8 +1158,7 @@ module.exports.BookForm = `
         label="firstName"
         subLabel ="email"
         valueKey="id"
-        query = "query people($search: searchPersonInput){people(search:$search){id firstName email} }"
-        queryName = "people"
+        targetModel = "Person"
         >
       </has-many-form-element>
     </div>
@@ -1566,6 +1564,69 @@ export default {
       console.log('my-detail-row: on-click', event.target)
     }
   }
+}
+</script>
+`
+module.exports.IndividualForm = `
+<template>
+  <div id="individual-form-elemns-div">
+
+  <input type="hidden" v-model="individual.id"/>
+
+
+    <div id="individual-name-div" class="form-group">
+            <label>name</label>
+
+  <input type="text" v-model="individual.name" class="form-control"/>
+
+
+      <div id="individual-name-err" v-if="validationError('name')" class="alert alert-danger">
+        {{validationError('name').message}}
+      </div>
+    </div>
+
+    <div id="individual-transcript_counts-div" class="form-group">
+      <label>transcript_counts</label>
+      <has-many-form-element
+        :associatedElements.sync="individual.transcript_countsFilter"
+        :searchUrl="this.$baseUrl()"
+        label="gene"
+        subLabel ="variable"
+        valueKey="id"
+        targetModel = "Transcript_count"
+        >
+      </has-many-form-element>
+    </div>
+  </div>
+</template>
+
+<script>
+import Vue from 'vue'
+import hasManyFormElemn from './hasManyFormElemn.vue'
+
+Vue.component('has-many-form-element', hasManyFormElemn)
+
+export default {
+  props: [ 'individual', 'errors' ],
+  computed: {
+    },
+  methods: {
+    validationError(modelField) {
+      if (this.errors == null) return false;
+      return this.errors.find(function (el) {
+        return el.path === modelField
+      })
+    }
+  },
+	mounted: function() {
+    let el = this;
+    $(document).ready(function(){
+      $('.datepicker').datepicker({
+        format: el.$defaultDateFormat(),
+        dateFormat: el.$defaultDateFormat()
+      })
+    })
+	}
 }
 </script>
 `

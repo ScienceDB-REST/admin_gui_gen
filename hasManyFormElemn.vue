@@ -36,6 +36,7 @@ import Vue from 'vue'
 import Autocomplete from 'vue2-autocomplete-js'
 import axios from 'axios'
 import _ from 'lodash'
+import inflection from 'inflection'
 
 Vue.component('autocomplete', Autocomplete)
 
@@ -43,6 +44,8 @@ export default {
   data() {
     return {
       parseSublabel : this.subLabel ? this.subLabel : "",
+      queryName : inflection.pluralize(this.targetModel.toLowerCase()),
+      query: '',
       search : {
         operator: "or",
         search: [{
@@ -50,10 +53,15 @@ export default {
           value: {value : "%%"},
           operator: "like"
         } ]
+      },
+      pagination :{
+        //default value of number for guess "to add" elements
+        limit: 10,
+        offset: 0
       }
     }
   },
-  props: ['associatedElements', 'searchUrl', 'label', 'subLabel', 'valueKey','query','queryName'],
+  props: ['associatedElements', 'searchUrl', 'label', 'subLabel', 'valueKey','targetModel'],
   components: {
     Autocomplete,
   },
@@ -105,9 +113,14 @@ export default {
           resolve(response.data[this.queryName])
         });
         data.append('query', this.query);
-        data.append('variables', JSON.stringify({search:this.search}))
+        data.append('variables', JSON.stringify({search:this.search, pagination: this.pagination}))
         ajax.send(data);
       })
+    },
+    createQuery(){
+      this.query = `query
+      ${this.queryName}($search: search${inflection.capitalize(this.targetModel)}Input $pagination: paginationInput)
+       {${this.queryName}(search:$search pagination:$pagination){id ${this.label} ${this.parseSublabel}} }`
     }
   },
   mounted: function(){
@@ -116,6 +129,9 @@ export default {
     if(this.associatedElements === undefined){
       this.$emit('update:associatedElements', []);
     }
+  },
+  created(){
+    this.createQuery();
   }
 }
 </script>

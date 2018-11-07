@@ -54,8 +54,7 @@
     subLabel ="<%-manyRel.sublabel-%>"
         <%sublabel = manyRel.sublabel-%><%}-%>
         valueKey="id"
-        query = "query <%- manyRel.relationName -%>($search: search<%-manyRel.targetModelCp-%>Input) {<%- manyRel.relationName -%>(search:$search){id <%- manyRel.label -%> <%-sublabel-%>} }"
-        queryName = "<%- manyRel.relationName -%>"
+        targetModel = "<%-manyRel.targetModelCp-%>"
         >
       </has-many-form-element>
     </div>
