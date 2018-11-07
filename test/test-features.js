@@ -149,7 +149,6 @@ describe('VueTable GraphQl Query', function(){
 
   describe('DetailViewForm', function(){
     let modelsObj = funks.fillOptionsForViews(models.dog) ;
-
     it('Only belongsTo - dog',async function(){
        let file = await funks.renderTemplate('detailView',modelsObj);
         let created_detailView = file.replace(/\s/g, '');
@@ -158,11 +157,18 @@ describe('VueTable GraphQl Query', function(){
     });
 
     let modelsObjProject = funks.fillOptionsForViews(models.project) ;
-
     it('hasMany - project',async function(){
        let file = await funks.renderTemplate('detailView',modelsObjProject);
         let created_detailView = file.replace(/\s/g, '');
         let test_detailView = testData.projectDetailView.replace(/\s/g, '');
+        expect(created_detailView).to.be.equal(test_detailView);
+    });
+
+    let modelsObjIndividual = funks.fillOptionsForViews(models.individual) ;
+    it('scroll - individual',async function(){
+       let file = await funks.renderTemplate('detailView',modelsObjIndividual);
+        let created_detailView = file.replace(/\s/g, '');
+        let test_detailView = testData.individualDetailView.replace(/\s/g, '');
         expect(created_detailView).to.be.equal(test_detailView);
     });
   });

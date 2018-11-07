@@ -165,7 +165,7 @@ export default {
         }
       ],
       moreParams: {
-      query: \`{vueTableBook{data {id  title genre publisher{name } peopleFilter{firstName  email}} total per_page current_page last_page prev_page_url next_page_url from to}}\`
+      query: \`{vueTableBook{data {id  title genre publisher{name } countFilteredPeople} total per_page current_page last_page prev_page_url next_page_url from to}}\`
       }
     }
   },
@@ -188,7 +188,7 @@ export default {
     },
     onFilterReset() {
       this.moreParams = {
-        query: \`{vueTableBook{data {id  title genre publisher{name } peopleFilter{firstName  email}} total per_page current_page last_page prev_page_url next_page_url from to}}\`
+        query: \`{vueTableBook{data {id  title genre publisher{name } countFilteredPeople} total per_page current_page last_page prev_page_url next_page_url from to}}\`
       }
       Vue.nextTick(() => this.$refs.vuetable.refresh())
     },
@@ -783,6 +783,11 @@ module.exports.DogDetailView = `
 </template>
 
 <script>
+import Vue from 'vue'
+import scrollListElement from './scrollListElement.vue'
+
+Vue.component('scroll-list', scrollListElement)
+
 export default {
   props: {
     rowData: {
@@ -851,15 +856,18 @@ module.exports.projectDetailView = `
 
 
 
-    <div id="project-researchers-div" v-if="rowData.researchersFilter" class="row w-100">
+    <div id="project-researchers-div" class="row w-100">
       <div class="col">
         <label>researchers:</label>
-        <ul class="list-group">
-          <li v-for="x in rowData.researchersFilter" class="list-group-item">
-            {{x.firstName}}
-            {{x.lastName}}
-                      </li>
-        </ul>
+        <scroll-list class="list-group"
+          :url="this.$baseUrl()"
+          :idSelected="rowData.id"
+          :countQuery="rowData.countFilteredResearchers"
+          query="readOneProject"
+          subQuery="researchersFilter"
+          label="firstName"
+          subLabel="lastName"
+        > </scroll-list>
       </div>
     </div>
 
@@ -868,6 +876,11 @@ module.exports.projectDetailView = `
 </template>
 
 <script>
+import Vue from 'vue'
+import scrollListElement from './scrollListElement.vue'
+
+Vue.component('scroll-list', scrollListElement)
+
 export default {
   props: {
     rowData: {
@@ -1495,6 +1508,63 @@ export default {
   mounted() {
     this.$events.$on('filter-set', eventData => this.onFilterSet(eventData))
     this.$events.$on('filter-reset', e => this.onFilterReset())
+  }
+}
+</script>
+`
+
+module.exports.individualDetailView = `
+<template>
+  <div @click="onClick">
+    <div class="inline field">
+      <label>id: </label>
+      <span>{{rowData.id}}</span>
+    </div>
+          <div class="inline field">
+        <label>name:</label>
+        <span>{{rowData.name}}</span>
+      </div>
+
+    <div id="individual-transcript_counts-div"  class="row w-100">
+      <div class="col">
+        <label>transcript_counts:</label>
+        <scroll-list class="list-group"
+        :url="this.$baseUrl()"
+        :idSelected="rowData.id"
+        :countQuery="rowData.countFilteredTranscript_counts"
+        query="readOneIndividual"
+        subQuery="transcript_countsFilter"
+        label="gene"
+        subLabel="variable"
+        > </scroll-list>
+      </div>
+    </div>
+
+  </div>
+</template>
+
+<script>
+import Vue from 'vue'
+import scrollListElement from './scrollListElement.vue'
+
+Vue.component('scroll-list', scrollListElement)
+
+export default {
+  props: {
+    rowData: {
+      type: Object,
+      required: true
+    },
+    rowIndex: {
+      type: Number
+    }
+  },
+  computed: {
+    },
+  methods: {
+    onClick (event) {
+      console.log('my-detail-row: on-click', event.target)
+    }
   }
 }
 </script>
