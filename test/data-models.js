@@ -110,3 +110,21 @@ module.exports.person = {
     }
   }
 }
+
+module.exports.individual = {
+  "model" : "individual",
+  "storageType" : "SQL",
+  "attributes" : {
+    "name" : "String"
+  },
+  "associations": {
+    "transcript_counts": {
+      "type" : "sql_hasMany",
+      "target" : "transcript_count",
+      "targetKey" : "individual_id",
+      "targetStorageType" : "sql",
+      "label" : "gene",
+      "sublabel" : "variable"
+    }
+  }
+}

@@ -171,7 +171,8 @@ parseAssociationsFromFile = function(associations){
           "sublabel" : association.sublabel,
           "targetModelLc" : association.target.toLowerCase(),
           "targetModelPlLc" : inflection.pluralize(association.target).toLowerCase(),
-          "targeModelCp" : inflection.capitalize(association.target),
+          "targetModelCp" : inflection.capitalize(association.target),
+          "targetModelPlCp": inflection.capitalize(inflection.pluralize(association.target)),
           "relationName" : name
         }
 
@@ -180,7 +181,8 @@ parseAssociationsFromFile = function(associations){
         let hm = {
           "relationName" : name,
           "targetModelPlLc" : inflection.pluralize(association.target).toLowerCase(),
-          "targeModelCp" : inflection.capitalize(association.target),
+          "targetModelCp" : inflection.capitalize(association.target),
+          "targetModelPlCp": inflection.capitalize(inflection.pluralize(association.target)),
           "label" : association.label,
           //sublabel can be undefined
           "sublabel" : association.sublabel

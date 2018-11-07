@@ -31,7 +31,7 @@
         <%sublabel = bt.sublabel-%>
         <%}-%>
         valueKey="<%- bt.primaryKey -%>"
-        query= "query <%- bt.targetModelPlLc%>($search: search<%-bt.targeModelCp-%>Input){ <%- bt.targetModelPlLc -%>(search:$search) {id <%- bt.label -%> <%- sublabel -%>}  }"
+        query= "query <%- bt.targetModelPlLc%>($search: search<%-bt.targetModelCp-%>Input){ <%- bt.targetModelPlLc -%>(search:$search) {id <%- bt.label -%> <%- sublabel -%>}  }"
         queryName = "<%- bt.targetModelPlLc -%>"
         v-bind:initialInput="<%- bt.targetModelLc -%>InitialLabel">
       </foreign-key-form-element>
@@ -54,7 +54,7 @@
     subLabel ="<%-manyRel.sublabel-%>"
         <%sublabel = manyRel.sublabel-%><%}-%>
         valueKey="id"
-        query = "query <%- manyRel.relationName -%>($search: search<%-manyRel.targeModelCp-%>Input) {<%- manyRel.relationName -%>(search:$search){id <%- manyRel.label -%> <%-sublabel-%>} }"
+        query = "query <%- manyRel.relationName -%>($search: search<%-manyRel.targetModelCp-%>Input) {<%- manyRel.relationName -%>(search:$search){id <%- manyRel.label -%> <%-sublabel-%>} }"
         queryName = "<%- manyRel.relationName -%>"
         >
       </has-many-form-element>

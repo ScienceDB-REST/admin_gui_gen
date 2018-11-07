@@ -32,8 +32,7 @@ describe('Features Test', function(){
 });
 
 describe('VueTable GraphQl Query', function(){
-    let modelsObj = funks.fillOptionsForViews(models.book) ;
-
+    let modelsObj = funks.fillOptionsForViews(models.book);
     it('VueTable  - book',async function(){
        let file = await funks.renderTemplate('tableView',modelsObj);
         let created_table = file.replace(/\s/g, '');
@@ -41,12 +40,19 @@ describe('VueTable GraphQl Query', function(){
         expect(created_table).to.be.equal(test_table);
     });
 
-    let modelsObjDog = funks.fillOptionsForViews(models.dog) ;
-
+    let modelsObjDog = funks.fillOptionsForViews(models.dog);
     it('VueTable  - dog',async function(){
        let file = await funks.renderTemplate('tableView',modelsObjDog);
         let created_table = file.replace(/\s/g, '');
         let test_table = testData.dog_table.replace(/\s/g, '');
+        expect(created_table).to.be.equal(test_table);
+    });
+
+    let modelsObjIndividual = funks.fillOptionsForViews(models.individual);
+    it('VueTable  - individual',async function(){
+       let file = await funks.renderTemplate('tableView',modelsObjIndividual);
+        let created_table = file.replace(/\s/g, '');
+        let test_table = testData.individual_table.replace(/\s/g, '');
         expect(created_table).to.be.equal(test_table);
     });
 

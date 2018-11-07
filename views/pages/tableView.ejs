@@ -89,7 +89,7 @@ export default {
  <%- bt.relationName-%>{<%-bt.label-%> <%if(bt.sublabel){-%> <%-bt.sublabel%> <%}-%>}<%}-%>
 <%for(i=0; i<hasManysArr.length; i++){-%>
 <%let manyRel = hasManysArr[i]-%>
- <%-manyRel.relationName-%>Filter{<%-manyRel.label-%> <%if(manyRel.sublabel){-%> <%-manyRel.sublabel%><%}-%>}<%}-%>
+ countFiltered<%-manyRel.targetModelPlCp-%><%}-%>
 } total per_page current_page last_page prev_page_url next_page_url from to}}`
       }
     }
@@ -119,7 +119,7 @@ export default {
  <%- bt.relationName-%>{<%-bt.label-%> <%if(bt.sublabel){-%> <%-bt.sublabel%> <%}-%>}<%}-%>
 <%for(i=0; i<hasManysArr.length; i++){-%>
 <%let manyRel = hasManysArr[i]-%>
- <%-manyRel.relationName-%>Filter{<%-manyRel.label-%> <%if(manyRel.sublabel){-%> <%-manyRel.sublabel%><%}-%>}<%}-%>
+ countFiltered<%-manyRel.targetModelPlCp-%><%}-%>
 } total per_page current_page last_page prev_page_url next_page_url from to}}`
       }
       Vue.nextTick(() => this.$refs.vuetable.refresh())
