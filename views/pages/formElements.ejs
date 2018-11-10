@@ -82,9 +82,26 @@ import hasManyFormElemn from './hasManyFormElemn.vue'
 
 Vue.component('has-many-form-element', hasManyFormElemn)
 <% } -%>
+import inflection from 'inflection'
+import axios from 'axios'
 
 export default {
   props: [ '<%- nameLc -%>', 'errors' ],
+  data(){
+    return{
+      target_models: [
+       <%for( i=0; i<hasManysArr.length; i++ ) { -%>
+      <%let hm = hasManysArr[i]-%>
+        {
+            model:'<%-hm.targetModelCp-%>',
+            label: '<%-hm.label-%>',
+            sublabel: '<%-hm.sublabel-%>'
+        }<%if(i!==hasManysArr.length-1){-%>,<%}-%>
+        <%}-%>
+      ],
+      model: '<%- nameLc -%>'
+    }
+  },
   computed: {
   <% for ( i=0; i<belongsTosArr.length; i++ ) { -%>
     <% var bt = belongsTosArr[i] -%>
@@ -109,6 +126,32 @@ export default {
       return this.errors.find(function (el) {
         return el.path === modelField
       })
+    },
+    loadAllAssociatedItems(){
+      this.target_models.forEach(tModel=>{
+        let query = this.createQuery(tModel);
+        axios.post( this.$baseUrl(),{
+          query: query,
+          variables:{id: this[ this.model.toLowerCase() ].id},
+          headers: {
+            'authorization': `Bearer ${this.$getAuthToken()}`,
+            'Accept': 'application/graphql'}
+        }).then(res=>{
+          this[ this.model.toLowerCase() ][ `${inflection.pluralize(tModel.model.toLowerCase())}Filter` ]=
+          res.data.data[`readOne${inflection.capitalize(this.model)}`][`${inflection.pluralize(tModel.model.toLowerCase())}Filter`];
+        });
+      })
+    },
+    createQuery(tModel){
+      return ` query
+        readOne${inflection.capitalize(this.model)}($id:ID!){
+          readOne${inflection.capitalize(this.model)}(id:$id ){
+            ${inflection.pluralize(tModel.model.toLowerCase())}Filter{
+              id ${tModel.label} ${tModel.sublabel}
+            }
+          }
+        }
+      `
     }
   },
 	mounted: function() {
@@ -119,6 +162,11 @@ export default {
         dateFormat: el.$defaultDateFormat()
       })
     })
-	}
+	},
+  created(){
+    if(this[this.model.toLowerCase()].id!==undefined){
+      this.loadAllAssociatedItems();
+    }
+  }
 }
 </script>
