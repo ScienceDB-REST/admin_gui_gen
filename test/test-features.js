@@ -92,6 +92,14 @@ describe('VueTable GraphQl Query', function(){
           let test_formElement = testData.IndividualForm.replace(/\s/g, '');
           expect(created_formElement).to.be.equal(test_formElement);
       });
+
+      let modelsObjTranscript = funks.fillOptionsForViews(models.transcript_count) ;
+      it('transcript_countFormElemns',async function(){
+         let file = await funks.renderTemplate('formElements',modelsObjTranscript);
+          let created_formElement = file.replace(/\s/g, '');
+          let test_formElement = testData.TranscriptForm.replace(/\s/g, '');
+          expect(created_formElement).to.be.equal(test_formElement);
+      });
     });
 
   describe('CreateForm ', function(){

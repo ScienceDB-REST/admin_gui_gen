@@ -31,8 +31,7 @@
         <%sublabel = bt.sublabel-%>
         <%}-%>
         valueKey="<%- bt.primaryKey -%>"
-        query= "query <%- bt.targetModelPlLc%>($search: search<%-bt.targetModelCp-%>Input){ <%- bt.targetModelPlLc -%>(search:$search) {id <%- bt.label -%> <%- sublabel -%>}  }"
-        queryName = "<%- bt.targetModelPlLc -%>"
+        targetModel="<%-bt.targetModelCp%>"
         v-bind:initialInput="<%- bt.targetModelLc -%>InitialLabel">
       </foreign-key-form-element>
     </div>

@@ -128,3 +128,24 @@ module.exports.individual = {
     }
   }
 }
+
+module.exports.transcript_count = {
+
+  "model" : "transcript_count",
+  "storageType" : "SQL",
+  "attributes" : {
+    "gene" : "String",
+    "variable" : "String",
+    "count" : "Float",
+    "tissue_or_condition": "String"
+  },
+  "associations":{
+    "individual":{
+      "type" : "sql_belongsTo",
+      "target" : "individual",
+      "targetKey" : "individual_id",
+      "targetStorageType" : "sql",
+      "label" : "name"
+    }
+  }
+}

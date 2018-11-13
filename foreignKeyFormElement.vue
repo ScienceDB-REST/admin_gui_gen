@@ -22,13 +22,15 @@
 import Vue from 'vue'
 import Autocomplete from 'vue2-autocomplete-js'
 import axios from 'axios'
-
+import inflection from 'inflection'
 Vue.component('autocomplete', Autocomplete)
 
 export default {
   data() {
     return {
       parseSublabel : this.subLabel ? this.subLabel : "",
+      queryName : inflection.pluralize(this.targetModel.toLowerCase()),
+      query: '',
       search : {
         operator: "or",
         search: [{
@@ -36,10 +38,15 @@ export default {
           value: {value : "%%"},
           operator: "like"
         } ]
+      },
+      pagination :{
+        //default value of number for guess "to add" elements
+        limit: 10,
+        offset: 0
       }
     }
   },
-  props: ['searchUrl', 'label', 'subLabel', 'valueKey', 'initialInput', 'foreignKey', 'query', 'queryName'],
+  props: ['searchUrl', 'label', 'subLabel', 'valueKey', 'initialInput', 'foreignKey', 'targetModel'],
   components: {
     Autocomplete,
   },
@@ -77,16 +84,30 @@ export default {
           const { responseText } = e.target
           let response = JSON.parse(responseText);
           // The options to pass in the autocomplete
-          resolve(response.data[this.queryName])
+          if(response.data[this.queryName]){
+              resolve(response.data[this.queryName])
+          }else{ //got error in the response
+            console.log("ERROR REQUEST: ",response.errors[0].message)
+          }
+
         });
+
         data.append('query', this.query);
-        data.append('variables', JSON.stringify({search:this.search}))
+        data.append('variables', JSON.stringify({search:this.search, pagination: this.pagination}))
         ajax.send(data);
       })
+    },
+    createQuery(){
+      this.query = `query
+      ${this.queryName}($search: search${inflection.capitalize(this.targetModel)}Input $pagination: paginationInput)
+       {${this.queryName}(search:$search pagination:$pagination){id ${this.label} ${this.parseSublabel}} }`
     }
   },
   mounted: function(){
     this.addSublabelFilter();
+  },
+  created(){
+    this.createQuery();
   }
 }
 </script>
