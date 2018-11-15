@@ -309,6 +309,7 @@ module.exports.DogFormElem = `
         :searchUrl = "this.$baseUrl()"
         v-model:foreignKey="dog.personId"
         label="firstName"
+        subLabel="lastName"
                 valueKey="id"
         targetModel="Person"
         v-bind:initialInput="personInitialLabel">
@@ -508,7 +509,7 @@ export default {
 readOneDog : function({url, variables, token}){
   let query = \`query readOneDog($id:ID!){
     readOneDog(id:$id){
-      id name breed
+      id name breed person{firstName lastName} researcher{firstName}
     }
   }
 
@@ -1079,7 +1080,7 @@ export default {
         }
       ],
       moreParams: {
-        query: \`{vueTableDog{data {id  name  breed person{firstName} researcher{firstName}}total per_page current_page last_page prev_page_url next_page_url from to}}\`
+        query: \`{vueTableDog{data {id  name  breed person{firstName lastName} researcher{firstName}}total per_page current_page last_page prev_page_url next_page_url from to}}\`
       }
     }
   },
@@ -1102,7 +1103,7 @@ export default {
     },
     onFilterReset() {
       this.moreParams = {
-        query: \`{vueTableDog{data {id  name  breed person{firstName} researcher{firstName} }total per_page current_page last_page prev_page_url next_page_url from to}}\`
+        query: \`{vueTableDog{data {id  name  breed person{firstName lastName} researcher{firstName} }total per_page current_page last_page prev_page_url next_page_url from to}}\`
       }
       Vue.nextTick(() => this.$refs.vuetable.refresh())
     },
