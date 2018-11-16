@@ -594,6 +594,7 @@ export default {
     onSubmit() {
       var t = this;
       var url = this.$baseUrl()
+      this.getAssociationsIds();
       queries.updateDog({url:url, variables:t.dog, token: t.$getAuthToken()})
       .then(function (response) {
         t.$router.push('/dogs')
@@ -608,6 +609,12 @@ export default {
           t.$router.push('/')
         }
       })
+    },
+    getOnlyIds(array){
+        return array.map((item)=>{ return item.id; });
+    },
+
+    getAssociationsIds(){
     }
   }
 }
@@ -1363,9 +1370,9 @@ export default {
 
   updatePerson : function({url, variables, token}){
     let query = \`mutation updatePerson($id:ID!
-     $firstName:String  $lastName:String  $email:String     ){
+     $firstName:String  $lastName:String  $email:String  $dogsFilter:[ID] $booksFilter:[ID]   ){
       updatePerson(id:$id
-       firstName:$firstName   lastName:$lastName   email:$email        )
+       firstName:$firstName   lastName:$lastName   email:$email dogs:$dogsFilter books:$booksFilter       )
       {id  firstName   lastName   email  }
     }\`
 
@@ -1951,6 +1958,133 @@ export default {
   created(){
     if(this[this.model.toLowerCase()].id!==undefined){
       this.loadAllAssociatedItems();
+    }
+  }
+}
+</script>
+`
+
+module.exports.BookRequests = `
+import requestGraphql from './request'
+
+export default {
+
+  addBookQuery : function({url, variables, token}){
+  let query = \` mutation addBook(
+   $title:String  $genre:String    $publisherId:Int    $peopleFilter:[ID]  ){
+    addBook(
+     title:$title   genre:$genre       publisherId:$publisherId      people:$peopleFilter    ){id  title   genre   }
+  }
+  \`
+  return requestGraphql({url, query, variables, token});
+},
+
+
+  readOneBook : function({url, variables, token}){
+    let query = \`query readOneBook($id:ID!){
+      readOneBook(id:$id){id  title   genre         publisher{ name
+         }     }
+    }\`
+    return requestGraphql({url, query, variables, token});
+  },
+
+  updateBook : function({url, variables, token}){
+    let query = \`mutation updateBook($id:ID!
+     $title:String  $genre:String      $publisherId:Int $peopleFilter:[ID] ){
+      updateBook(id:$id
+       title:$title   genre:$genre         publisherId:$publisherId  people:$peopleFilter)
+      {id  title   genre  }
+    }\`
+
+    return requestGraphql({url, query, variables, token});
+  },
+
+  deleteBook : function({url, variables, token}){
+    let query = \`mutation deleteBook($id:ID!){
+      deleteBook(id:$id)
+    }\`
+    return requestGraphql({url, query, variables, token});
+  }
+}
+`
+
+module.exports.BookEdit = `
+<template>
+  <div class="col-xs-5">
+    <h4>Edit book</h4>
+    <div id="book-div">
+      <div v-if="book" class="content">
+        <form id="book-form" v-on:submit.prevent="onSubmit">
+
+          <book-form-elemns v-bind:errors="errors" v-bind:book="book"></book-form-elemns>
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import Vue from 'vue'
+import axios from 'axios'
+import BookFormElemns from './BookFormElemns.vue'
+import queries from '../requests/book'
+
+Vue.component('book-form-elemns', BookFormElemns)
+
+export default {
+  data() {
+    return {
+      loading: false,
+      book: null,
+      error: null,
+      errors: null,
+    }
+  },
+  created() {
+    this.fetchData()
+  },
+  watch: {
+    '$route': 'fetchData',
+  },
+  methods: {
+    fetchData() {
+      var t = this
+      t.error = null
+      if(this.$route.params.id){
+        queries.readOneBook({ url:this.$baseUrl(), variables: {id:this.$route.params.id}, token:t.$getAuthToken()})
+        .then(function (response) {
+            t.book = response.data.data.readOneBook          }, function (err) {
+            t.parent.error = err
+          })
+      }
+    },
+    onSubmit() {
+      var t = this;
+      var url = this.$baseUrl()
+      this.getAssociationsIds();
+      queries.updateBook({url:url, variables:t.book, token: t.$getAuthToken()})
+      .then(function (response) {
+        t.$router.push('/books')
+      }).catch( function (res) {
+        if (res.response && res.response.data && res.response.data.errors) {
+          t.errors = res.response.data.errors
+        } else {
+          var err = (res && res.response && res.response.data && res.response
+            .data.message ?
+            res.response.data.message : res)
+          t.$root.$emit('globalError', err)
+          t.$router.push('/')
+        }
+      })
+    },
+    getOnlyIds(array){
+        return array.map((item)=>{ return item.id; });
+    },
+
+    getAssociationsIds(){
+        this.book.peopleFilter = this.getOnlyIds(this.book.peopleFilter);
     }
   }
 }

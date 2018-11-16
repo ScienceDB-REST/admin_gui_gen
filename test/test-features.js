@@ -138,6 +138,16 @@ describe('VueTable GraphQl Query', function(){
         let test_requests = testData.PersonRequests.replace(/\s/g, '');
         expect(created_requests).to.be.equal(test_requests);
     });
+
+    let modelsObjBook = funks.fillOptionsForViews(models.book) ;
+
+    it('update with associated items - book',async function(){
+       let file = await funks.renderTemplate('graphqlRequests',modelsObjBook);
+        let created_requests = file.replace(/\s/g, '');
+        let test_requests = testData.BookRequests.replace(/\s/g, '');
+        expect(created_requests).to.be.equal(test_requests);
+    });
+
   });
 
   describe('EditForm', function(){
@@ -149,6 +159,17 @@ describe('VueTable GraphQl Query', function(){
         let test_editForm = testData.DogEdit.replace(/\s/g, '');
         expect(created_editForm).to.be.equal(test_editForm);
     });
+
+    let modelsObjBook = funks.fillOptionsForViews(models.book) ;
+
+    it('BookEditForm - update hasMany',async function(){
+       let file = await funks.renderTemplate('editForm',modelsObjBook);
+        let created_editForm = file.replace(/\s/g, '');
+        let test_editForm = testData.BookEdit.replace(/\s/g, '');
+        expect(created_editForm).to.be.equal(test_editForm);
+    });
+
+
   });
 
   describe('CustomActionsForm', function(){
