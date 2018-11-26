@@ -208,3 +208,14 @@ describe('VueTable GraphQl Query', function(){
         expect(created_detailView).to.be.equal(test_detailView);
     });
   });
+
+  describe('UploadForm', function(){
+    let modelsObj = funks.fillOptionsForViews(models.dog) ;
+
+    it('UploadForm stream csv - dog',async function(){
+       let file = await funks.renderTemplate('uploadCsvForm',modelsObj);
+        let created_customActions = file.replace(/\s/g, '');
+        let test_customActions = testData.DogUploadFormCsv.replace(/\s/g, '');
+        expect(created_customActions).to.be.equal(test_customActions);
+    });
+  });
