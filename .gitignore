@@ -1,5 +1,10 @@
-node_modules
-node_modules
+# IntelliJ Idea project settings folder
 .idea
-.idea
+
+# NPM package manager temporary files and folders
+node_modules
+npm-debug.log
+package-lock.json
+
+# Other
 .vscode-upload.json

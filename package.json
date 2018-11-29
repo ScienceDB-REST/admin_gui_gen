@@ -7,6 +7,7 @@
     "admin_gui_gen": "./index.js"
   },
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Dr. Asis Hallab <asis.hallab@gmail.com>",
