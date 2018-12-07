@@ -18,6 +18,15 @@ describe('Features Test', function(){
       });
     });
 
+    it('Request index file', function(done){
+      funks.renderTemplate('request_index',modelsObj)
+      .then( (file) =>{
+        let created_index = file.replace(/\s/g, '');
+        let test_index = testData.resquest_index.replace(/\s/g, '');
+        expect(created_index).to.be.equal(test_index);
+        done();
+      });
+    });
     //test navigation bar file
     it('Side navigation bar file', function(done){
       funks.renderTemplate('sideNav', modelsObj)

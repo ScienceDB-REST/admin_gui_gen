@@ -14,6 +14,19 @@ let child_paths = []
 export default child_paths
 `
 
+module.exports.resquest_index = `
+import projectQueries from './project'
+import researcherQueries from './researcher'
+import specieQueries from './specie'
+
+export default  {
+  Project: projectQueries,
+  Researcher: researcherQueries,
+  Specie: specieQueries,
+}
+
+`
+
 module.exports.sideNav =
 `
 <template>
@@ -67,15 +80,18 @@ module.exports.modelsObj =
   [ { name: 'project',
       nameLc: 'project',
       namePl: 'projects',
-      namePlLc: 'projects' },
+      namePlLc: 'projects',
+      nameCp: 'Project'},
     { name: 'researcher',
       nameLc: 'researcher',
       namePl: 'researchers',
-      namePlLc: 'researchers' },
+      namePlLc: 'researchers',
+      nameCp: 'Researcher'},
     { name: 'specie',
       nameLc: 'specie',
       namePl: 'species',
-      namePlLc: 'species' } ] }
+      namePlLc: 'species',
+      nameCp: 'Specie'} ] }
 
 module.exports.book_table = `
 <template>
