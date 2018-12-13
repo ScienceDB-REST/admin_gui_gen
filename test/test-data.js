@@ -512,7 +512,7 @@ import requestGraphql from './request'
 
 export default {
 
-  addDogQuery : function({url, variables, token}){
+  create : function({url, variables, token}){
   let query = \` mutation addDog(
    $name:String  $breed:String    $personId:Int  $researcherId:Int   ){
     addDog(
@@ -533,7 +533,7 @@ readOneDog : function({url, variables, token}){
     return requestGraphql({url, query, variables, token});
   },
 
-  updateDog : function({url, variables, token}){
+  update : function({url, variables, token}){
     let query = \`mutation updateDog($id:ID! $name:String $breed:String $personId:Int $researcherId:Int ){
       updateDog(id:$id name:$name breed:$breed  personId:$personId researcherId:$researcherId){
         id name breed
@@ -1366,16 +1366,15 @@ import requestGraphql from './request'
 
 export default {
 
-  addPersonQuery : function({url, variables, token}){
-  let query = \` mutation addPerson(
-   $firstName:String  $lastName:String  $email:String $dogsFilter:[ID] $booksFilter:[ID]    ){
-    addPerson(
-     firstName:$firstName   lastName:$lastName   email:$email dogs:$dogsFilter books:$booksFilter         ){id  firstName   lastName   email   }
-  }
-  \`
-  return requestGraphql({url, query, variables, token});
-},
-
+  create : function({url, variables, token}){
+    let query = \` mutation addPerson(
+     $firstName:String  $lastName:String  $email:String      $addDogs:[ID] $addBooks:[ID]  ){
+      addPerson(
+       firstName:$firstName   lastName:$lastName   email:$email           addDogs:$addDogs addBooks:$addBooks    ){id  firstName   lastName   email   }
+    }
+    \`
+    return requestGraphql({url, query, variables, token});
+  },
 
   readOnePerson : function({url, variables, token}){
     let query = \`query readOnePerson($id:ID!){
@@ -1384,12 +1383,11 @@ export default {
     return requestGraphql({url, query, variables, token});
   },
 
-  updatePerson : function({url, variables, token}){
+  update : function({url, variables, token}){
     let query = \`mutation updatePerson($id:ID!
-     $firstName:String  $lastName:String  $email:String  $dogsFilter:[ID] $booksFilter:[ID]   ){
+     $firstName:String  $lastName:String  $email:String $addDogs:[ID] $removeDogs:[ID]  $addBooks:[ID] $removeBooks:[ID] ){
       updatePerson(id:$id
-       firstName:$firstName   lastName:$lastName   email:$email dogs:$dogsFilter books:$booksFilter       )
-      {id  firstName   lastName   email  }
+       firstName:$firstName   lastName:$lastName   email:$email  addDogs:$addDogs removeDogs:$removeDogs addBooks:$addBooks removeBooks:$removeBooks    ){id  firstName   lastName   email  }
     }\`
 
     return requestGraphql({url, query, variables, token});
@@ -1985,11 +1983,11 @@ import requestGraphql from './request'
 
 export default {
 
-  addBookQuery : function({url, variables, token}){
+  create : function({url, variables, token}){
   let query = \` mutation addBook(
-   $title:String  $genre:String    $publisherId:Int    $peopleFilter:[ID]  ){
+   $title:String  $genre:String    $publisherId:Int    $addPeople:[ID]  ){
     addBook(
-     title:$title   genre:$genre       publisherId:$publisherId      people:$peopleFilter    ){id  title   genre   }
+     title:$title   genre:$genre       publisherId:$publisherId      addPeople:$addPeople    ){id  title   genre   }
   }
   \`
   return requestGraphql({url, query, variables, token});
@@ -2004,11 +2002,11 @@ export default {
     return requestGraphql({url, query, variables, token});
   },
 
-  updateBook : function({url, variables, token}){
+  update : function({url, variables, token}){
     let query = \`mutation updateBook($id:ID!
-     $title:String  $genre:String      $publisherId:Int $peopleFilter:[ID] ){
+     $title:String  $genre:String      $publisherId:Int $addPeople:[ID] $removePeople:[ID]){
       updateBook(id:$id
-       title:$title   genre:$genre         publisherId:$publisherId  people:$peopleFilter)
+       title:$title   genre:$genre         publisherId:$publisherId  addPeople:$addPeople removePeople:$removePeople)
       {id  title   genre  }
     }\`
 
