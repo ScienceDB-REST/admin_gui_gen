@@ -450,7 +450,7 @@ module.exports.DogCreateForm = `
       <div v-if="dog" class="content">
         <form id="dog-form" v-on:submit.prevent="onSubmit">
 
-          <dog-form-elemns v-bind:errors="errors" v-bind:dog="dog"></dog-form-elemns>
+          <dog-form-elemns mode="create" v-bind:errors="errors" v-bind:dog="dog"></dog-form-elemns>
 
           <button type="submit" class="btn btn-primary">Create</button>
         </form>
@@ -463,7 +463,7 @@ module.exports.DogCreateForm = `
 import Vue from 'vue'
 import axios from 'axios'
 import DogFormElemns from './DogFormElemns.vue'
-import queries from '../requests/dog'
+import Queries from '../requests/index'
 
 Vue.component('dog-form-elemns', DogFormElemns)
 
@@ -481,7 +481,7 @@ export default {
       var t = this;
       var url = this.$baseUrl()
       this.getAssociationsIds()
-      queries.addDogQuery({url:url, variables:t.dog, token:t.$getAuthToken()})
+      Queries.Dog.create({url:url, variables:t.dog, token:t.$getAuthToken()})
       .then(function(response) {
         t.$router.push('/dogs')
       }).catch(function(res) {
@@ -1403,68 +1403,68 @@ export default {
 `
 module.exports.PersonCreateForm = `
 <template>
-<div class="col-xs-5">
-  <h4>New person</h4>
-  <div id="person-div">
-    <div v-if="person" class="content">
-      <form id="person-form" v-on:submit.prevent="onSubmit">
+  <div class="col-xs-5">
+    <h4>New person</h4>
+    <div id="person-div">
+      <div v-if="person" class="content">
+        <form id="person-form" v-on:submit.prevent="onSubmit">
 
-        <person-form-elemns v-bind:errors="errors" v-bind:person="person"></person-form-elemns>
+          <person-form-elemns mode="create" v-bind:errors="errors" v-bind:person="person"></person-form-elemns>
 
-        <button type="submit" class="btn btn-primary">Create</button>
-      </form>
+          <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
 import Vue from 'vue'
 import axios from 'axios'
 import PersonFormElemns from './PersonFormElemns.vue'
-import queries from '../requests/person'
+import Queries from '../requests/index'
 
 Vue.component('person-form-elemns', PersonFormElemns)
 
 export default {
-data() {
-  return {
-    loading: false,
-    person: {},
-    error: null,
-    errors: null,
-  }
-},
-methods: {
-  onSubmit() {
-    var t = this;
-    var url = this.$baseUrl()
-    this.getAssociationsIds()
-    queries.addPersonQuery({url:url, variables: t.person, token: t.$getAuthToken()})
-    .then(function(response) {
-      t.$router.push('/people')
-    }).catch(function(res) {
-      if (res.response && res.response.data && res.response.data.errors) {
-        t.errors = res.response.data.errors
-      } else {
-        var err = (res && res.response && res.response.data && res.response
-          .data.message ?
-          res.response.data.message : res)
-        t.$root.$emit('globalError', err)
-        t.$router.push('/')
-      }
-    })
+  data() {
+    return {
+      loading: false,
+      person: {},
+      error: null,
+      errors: null,
+    }
   },
+  methods: {
+    onSubmit() {
+      var t = this;
+      var url = this.$baseUrl()
+      this.getAssociationsIds()
+      Queries.Person.create({url:url, variables: t.person, token: t.$getAuthToken()})
+      .then(function(response) {
+        t.$router.push('/people')
+      }).catch(function(res) {
+        if (res.response && res.response.data && res.response.data.errors) {
+          t.errors = res.response.data.errors
+        } else {
+          var err = (res && res.response && res.response.data && res.response
+            .data.message ?
+            res.response.data.message : res)
+          t.$root.$emit('globalError', err)
+          t.$router.push('/')
+        }
+      })
+    },
 
-  getOnlyIds(array){
-     return array.map((item)=>{ return item.id; });
-  },
+    getOnlyIds(array){
+      return array.map((item)=>{ return item.id; });
+    },
 
-  getAssociationsIds(){
-     this.person.dogsFilter = this.getOnlyIds(this.person.dogsFilter);
-     this.person.booksFilter = this.getOnlyIds(this.person.booksFilter);
+    getAssociationsIds(){
+              this.person.addDogs = this.getOnlyIds(this.person.addDogs);
+              this.person.addBooks = this.getOnlyIds(this.person.addBooks);
+          }
   }
-}
 }
 </script>
 `
@@ -2191,4 +2191,7 @@ methods: {
 }
 }
 </script>
+`
+module.exports.PersonEdit = `
+
 `
