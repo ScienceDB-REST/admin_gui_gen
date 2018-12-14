@@ -10,7 +10,7 @@
         v-bind:anchor="label"
         :label="parseSublabel"
         :classes="{ wrapper: 'form-wrapper', input: 'form-control', list: 'data-list', item: 'data-list-item' }"
-        :on-select="addElement"
+        :on-select="addElementDirect"
         :onInput="onUserInput"
         :customHeaders="{ Authorization: `Bearer ${this.$getAuthToken()}` }"
         :onShouldGetData="getDataPromise"
@@ -52,7 +52,7 @@ export default {
     return {
       parseSublabel : this.subLabel ? this.subLabel : "",
       queryName : inflection.pluralize(this.targetModel.toLowerCase()),
-      query: '',
+      queryAll: '',
       search : {
         operator: "or",
         search: [{
@@ -139,13 +139,13 @@ export default {
           // The options to pass in the autocomplete
           resolve(response.data[this.queryName])
         });
-        data.append('query', this.query);
+        data.append('query', this.queryAll);
         data.append('variables', JSON.stringify({search:this.search, pagination: this.pagination}))
         ajax.send(data);
       })
     },
     createQuery(){
-      this.query = `query
+      this.queryAll = `query
       ${this.queryName}($search: search${inflection.capitalize(this.targetModel)}Input $pagination: paginationInput)
        {${this.queryName}(search:$search pagination:$pagination){id ${this.label} ${this.parseSublabel}} }`
     }
