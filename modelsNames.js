@@ -17,7 +17,8 @@ exports.getSavedModelsNames = function (newModel, directory) {
             name:modelElem,
             nameLc: modelElem.toLowerCase(),
             namePl: inflection.pluralize(modelElem),
-            namePlLc: inflection.pluralize(modelElem).toLowerCase()
+            namePlLc: inflection.pluralize(modelElem).toLowerCase(),
+            nameCp: inflection.capitalize(modelElem)
         }
     })
 
@@ -26,7 +27,8 @@ exports.getSavedModelsNames = function (newModel, directory) {
             name:newModel,
             nameLc: newModel.toLowerCase(),
             namePl: inflection.pluralize(newModel),
-            namePlLc: inflection.pluralize(newModel).toLowerCase()
+            namePlLc: inflection.pluralize(newModel).toLowerCase(),
+            nameCp: inflection.capitalize(newModel)
         })
     }
 

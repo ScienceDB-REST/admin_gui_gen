@@ -91,6 +91,8 @@ fs.readdirSync(program.jsonFiles).forEach( async (json_file) =>{
    funks.renderToFile(indexRoutesExt, 'routes_index', modelsObj)
    let sideNavPath = path.resolve(directory,"src","components","SideNav.vue")
    funks.renderToFile(sideNavPath, 'sideNav', modelsObj)
+   let indexRequestPath = path.resolve(directory, "src", "requests", "index.js")
+   funks.renderToFile(indexRequestPath, 'request_index', modelsObj)
  })
  .catch((error)=>{console.log(error); console.log("SOMETHING WRONG")});
 
