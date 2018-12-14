@@ -19,16 +19,18 @@
     </div>
 
     <div class="col-sm-5">
-      <virtual-list class="list"
-          :size="40"
-          :remain="3"
-          :tobottom="toBottom"
-      >
-          <div class="item" v-for="(udf, index) of associatedElements" :key="index">
-              <i v-on:click="removeElement(udf)" class="delete icon"></i>
-            {{ udf[label]}} <span v-if="subLabel!==''"> {{ udf[subLabel]}} </span>
-          </div>
-      </virtual-list>
+    <scroll-list class="list-group"
+      :mode="mode"
+      :url="this.$baseUrl()"
+      :idSelected="idSelected"
+      :countQuery="countQuery"
+      :query="query"
+      :subQuery="subQuery"
+      :label="label"
+      :subLabel="parseSublabel"
+      :displayItems="addItems"
+      v-on:remove-element="removeElementDirect"
+    > </scroll-list>
     </div>
 
   </div>
@@ -41,7 +43,7 @@ import Autocomplete from 'vue2-autocomplete-js'
 import axios from 'axios'
 import _ from 'lodash'
 import inflection from 'inflection'
-import virtualList from 'vue-virtual-scroll-list'
+import Queries from '../requests/index'
 
 Vue.component('autocomplete', Autocomplete)
 
@@ -66,25 +68,44 @@ export default {
       }
     }
   },
-  props: ['associatedElements', 'searchUrl', 'label', 'subLabel', 'valueKey','targetModel'],
+  props: ['model', 'searchUrl', 'idSelected','query', 'subQuery' ,'label', 'subLabel', 'countQuery','valueKey','targetModel', 'removeName', 'addName', 'mode', 'addItems'],
   components: {
-    Autocomplete,
-    'virtual-list' : virtualList
+    Autocomplete
   },
   methods: {
-    addElement(data) {
-      let modList = this.associatedElements ? _.clone(this.associatedElements) : []
-      modList.push(data)
-      modList = _.uniqBy(modList, 'id')
-      this.$emit('update:associatedElements', modList)
+    addElementDirect(data){
+      if(this.mode=="create"){
+        console.log("HERE WE CAN ADD LOCALLY")
+        let modList = this.addItems ? _.clone(this.addItems) : []
+        modList.push(data)
+        modList = _.uniqBy(modList, 'id')
+        this.$emit('update:addItems', modList)
+
+      }else{
+        let variables = {
+            id: this.idSelected,
+            [this.addName]: [ data.id]
+        }
+        Queries[this.model].update({url:this.$baseUrl(), variables:variables ,token:this.$getAuthToken()});
+      }
       this.$refs.autocomplete.setValue(null)
     },
-    removeElement(data) {
-      let relId = this.valueKey;
-      let modList = _.uniq(_.clone(this.associatedElements)).filter(function(x) {
-        return x[relId] !== data[relId]
-      })
-      this.$emit('update:associatedElements', modList)
+    removeElementDirect(dataId){
+      if(this.mode=="create"){
+        console.log("HERE WE CAN REMOVE LOCALLY")
+        let relId = this.valueKey;
+        let modList = _.uniq(_.clone(this.addItems)).filter(function(x) {
+          return x[relId] !==  dataId//data[relId]
+        })
+        this.$emit('update:addItems', modList)
+      }else{
+        let variables = {
+            id: this.idSelected,
+            [this.removeName]: [dataId]
+        }
+        Queries[this.model].update({url:this.$baseUrl(), variables:variables ,token:this.$getAuthToken()});
+      }
+
     },
     onUserInput(data) {
       if(data === ''){
@@ -127,20 +148,16 @@ export default {
       this.query = `query
       ${this.queryName}($search: search${inflection.capitalize(this.targetModel)}Input $pagination: paginationInput)
        {${this.queryName}(search:$search pagination:$pagination){id ${this.label} ${this.parseSublabel}} }`
-    },
-    toBottom(){
-      console.log("To be implemented...??");
     }
   },
   mounted: function(){
     this.addSublabelFilter();
-    //set by default associated items to empty array
-    if(this.associatedElements === undefined){
-      this.$emit('update:associatedElements', []);
-    }
   },
   created(){
     this.createQuery();
+    if(this.mode==='create'){
+      this.$emit('update:addItems', []);
+    }
   }
 }
 </script>
