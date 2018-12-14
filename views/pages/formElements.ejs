@@ -45,15 +45,23 @@
     <div id="<%- nameLc -%>-<%- manyRel.relationName -%>-div" class="form-group">
       <label><%- manyRel.relationName -%></label>
       <has-many-form-element
-        :associatedElements.sync="<%- nameLc -%>.<%- manyRel.relationName -%>Filter"
         :searchUrl="this.$baseUrl()"
+        :idSelected="<%- nameLc -%>.id"
+        :countQuery="<%- nameLc -%>.countFiltered<%- manyRel.targetModelPlCp -%>"
+        :mode="mode"
+        :addItems.sync="<%- nameLc -%>.add<%- manyRel.targetModelPlCp -%>"
         label="<%- manyRel.label -%>"
         <%let sublabel = ""-%>
         <%if(manyRel.sublabel){-%>
     subLabel ="<%-manyRel.sublabel-%>"
         <%sublabel = manyRel.sublabel-%><%}-%>
         valueKey="id"
+        model="<%-nameCp-%>"
         targetModel = "<%-manyRel.targetModelCp-%>"
+        removeName="remove<%-manyRel.targetModelPlCp-%>"
+        addName="add<%-manyRel.targetModelPlCp-%>"
+        query="readOne<%- nameCp -%>"
+        subQuery="<%- manyRel.targetModelPlLc -%>Filter"
         >
       </has-many-form-element>
     </div>
@@ -85,7 +93,7 @@ import inflection from 'inflection'
 import axios from 'axios'
 
 export default {
-  props: [ '<%- nameLc -%>', 'errors' ],
+  props: [ '<%- nameLc -%>', 'errors', 'mode' ],
   data(){
     return{
       target_models: [
@@ -102,7 +110,7 @@ export default {
     }
   },
   computed: {
-  <% for ( i=0; i<belongsTosArr.length; i++ ) { -%>
+    <% for ( i=0; i<belongsTosArr.length; i++ ) { -%>
     <% var bt = belongsTosArr[i] -%>
     <%- bt.targetModelLc -%>InitialLabel: function () {
       var x = this.<%- nameLc -%>.<%- bt.relationName %>
@@ -118,6 +126,7 @@ export default {
     ,
     <% } -%>
   <% } -%>
+
   },
   methods: {
     validationError(modelField) {
@@ -125,32 +134,6 @@ export default {
       return this.errors.find(function (el) {
         return el.path === modelField
       })
-    },
-    loadAllAssociatedItems(){
-      this.target_models.forEach(tModel=>{
-        let query = this.createQuery(tModel);
-        axios.post( this.$baseUrl(),{
-          query: query,
-          variables:{id: this[ this.model.toLowerCase() ].id},
-          headers: {
-            'authorization': `Bearer ${this.$getAuthToken()}`,
-            'Accept': 'application/graphql'}
-        }).then(res=>{
-          this[ this.model.toLowerCase() ][ `${inflection.pluralize(tModel.model.toLowerCase())}Filter` ]=
-          res.data.data[`readOne${inflection.capitalize(this.model)}`][`${inflection.pluralize(tModel.model.toLowerCase())}Filter`];
-        });
-      })
-    },
-    createQuery(tModel){
-      return ` query
-        readOne${inflection.capitalize(this.model)}($id:ID!){
-          readOne${inflection.capitalize(this.model)}(id:$id ){
-            ${inflection.pluralize(tModel.model.toLowerCase())}Filter{
-              id ${tModel.label} ${tModel.sublabel}
-            }
-          }
-        }
-      `
     }
   },
 	mounted: function() {
@@ -163,9 +146,7 @@ export default {
     })
 	},
   created(){
-    if(this[this.model.toLowerCase()].id!==undefined){
-      this.loadAllAssociatedItems();
-    }
+
   }
 }
 </script>

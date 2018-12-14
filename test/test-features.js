@@ -109,6 +109,15 @@ describe('VueTable GraphQl Query', function(){
           let test_formElement = testData.TranscriptForm.replace(/\s/g, '');
           expect(created_formElement).to.be.equal(test_formElement);
       });
+
+      let modelsObjPerson = funks.fillOptionsForViews(models.person) ;
+      it('PersonFormElemns - person',async function(){
+         let file = await funks.renderTemplate('formElements',modelsObjPerson);
+          let created_formElement = file.replace(/\s/g, '');
+          let test_formElement = testData.PersonForm.replace(/\s/g, '');
+          expect(created_formElement).to.be.equal(test_formElement);
+      });
+
     });
 
   describe('CreateForm ', function(){
@@ -178,6 +187,14 @@ describe('VueTable GraphQl Query', function(){
         expect(created_editForm).to.be.equal(test_editForm);
     });
 
+    // let modelsObjBook = funks.fillOptionsForViews(models.person) ;
+    //
+    // it('BookEditForm - edit prop',async function(){
+    //    let file = await funks.renderTemplate('editForm',modelsObjBook);
+    //     let created_editForm = file.replace(/\s/g, '');
+    //     let test_editForm = testData.PersonEdit.replace(/\s/g, '');
+    //     expect(created_editForm).to.be.equal(test_editForm);
+    // });
 
   });
 

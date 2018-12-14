@@ -360,7 +360,7 @@ import axios from 'axios'
 
 export default {
 
-  props: [ 'dog', 'errors' ],
+  props: [ 'dog', 'errors', 'mode' ],
   data(){
   return{
     target_models: [
@@ -397,32 +397,6 @@ export default {
       return this.errors.find(function (el) {
         return el.path === modelField
       })
-    },
-    loadAllAssociatedItems(){
-      this.target_models.forEach(tModel=>{
-        let query = this.createQuery(tModel);
-        axios.post( this.$baseUrl(),{
-          query: query,
-          variables:{id: this[ this.model.toLowerCase() ].id},
-          headers: {
-            'authorization': \`Bearer \${this.$getAuthToken()}\`,
-            'Accept': 'application/graphql'}
-        }).then(res=>{
-          this[ this.model.toLowerCase() ][ \`\${inflection.pluralize(tModel.model.toLowerCase())}Filter\` ]=
-          res.data.data[\`readOne\${inflection.capitalize(this.model)}\`][\`\${inflection.pluralize(tModel.model.toLowerCase())}Filter\`];
-        });
-      })
-    },
-    createQuery(tModel){
-      return \` query
-        readOne\${inflection.capitalize(this.model)}($id:ID!){
-          readOne\${inflection.capitalize(this.model)}(id:$id ){
-            \${inflection.pluralize(tModel.model.toLowerCase())}Filter{
-              id \${tModel.label} \${tModel.sublabel}
-            }
-          }
-        }
-      \`
     }
   },
 	mounted: function() {
@@ -435,9 +409,6 @@ export default {
     })
 	},
   created(){
-    if(this[ this.model.toLowerCase() ].id!==undefined){
-      this.loadAllAssociatedItems();
-    }
   }
 }
 </script>
@@ -744,12 +715,20 @@ module.exports.ProjectForm = `
     <div id="project-researchers-div" class="form-group">
       <label>researchers</label>
       <has-many-form-element
-        :associatedElements.sync="project.researchersFilter"
         :searchUrl="this.$baseUrl()"
+        :idSelected="project.id"
+        :countQuery="project.countFilteredResearchers"
+        :mode="mode"
+        :addItems.sync="project.addResearchers"
         label="firstName"
                     subLabel ="lastName"
                 valueKey="id"
+        model="Project"
         targetModel = "Researcher"
+        removeName="removeResearchers"
+        addName="addResearchers"
+        query="readOneProject"
+        subQuery="researchersFilter"
         >
       </has-many-form-element>
     </div>
@@ -773,7 +752,7 @@ import inflection from 'inflection'
 import axios from 'axios'
 
 export default {
-  props: [ 'project', 'errors' ],
+  props: [ 'project', 'errors', 'mode' ],
   data(){
     return{
       target_models: [
@@ -803,32 +782,6 @@ export default {
       return this.errors.find(function (el) {
         return el.path === modelField
       })
-    },
-    loadAllAssociatedItems(){
-      this.target_models.forEach(tModel=>{
-        let query = this.createQuery(tModel);
-        axios.post( this.$baseUrl(),{
-          query: query,
-          variables:{id: this[ this.model.toLowerCase() ].id},
-          headers: {
-            'authorization': \`Bearer \${this.$getAuthToken()}\`,
-            'Accept': 'application/graphql'}
-        }).then(res=>{
-          this[ this.model.toLowerCase() ][ \`\${inflection.pluralize(tModel.model.toLowerCase())}Filter\` ]=
-          res.data.data[\`readOne\${inflection.capitalize(this.model)}\`][\`\${inflection.pluralize(tModel.model.toLowerCase())}Filter\`];
-        });
-      })
-    },
-    createQuery(tModel){
-      return \` query
-        readOne\${inflection.capitalize(this.model)}($id:ID!){
-          readOne\${inflection.capitalize(this.model)}(id:$id ){
-            \${inflection.pluralize(tModel.model.toLowerCase())}Filter{
-              id \${tModel.label} \${tModel.sublabel}
-            }
-          }
-        }
-      \`
     }
   },
 	mounted: function() {
@@ -841,9 +794,6 @@ export default {
     })
 	},
   created(){
-    if(this[this.model.toLowerCase()].id!==undefined){
-      this.loadAllAssociatedItems();
-    }
   }
 }
 </script>
@@ -1257,12 +1207,20 @@ module.exports.BookForm = `
     <div id="book-people-div" class="form-group">
       <label>people</label>
       <has-many-form-element
-        :associatedElements.sync="book.peopleFilter"
         :searchUrl="this.$baseUrl()"
+        :idSelected="book.id"
+        :countQuery="book.countFilteredPeople"
+        :mode="mode"
+        :addItems.sync="book.addPeople"
         label="firstName"
         subLabel ="email"
         valueKey="id"
+        model="Book"
         targetModel = "Person"
+        removeName="removePeople"
+        addName="addPeople"
+        query="readOneBook"
+        subQuery="peopleFilter"
         >
       </has-many-form-element>
     </div>
@@ -1286,7 +1244,7 @@ import inflection from 'inflection'
 import axios from 'axios'
 
 export default {
-  props: [ 'book', 'errors' ],
+  props: [ 'book', 'errors', 'mode' ],
   data(){
   return{
     target_models: [
@@ -1316,32 +1274,6 @@ export default {
       return this.errors.find(function (el) {
         return el.path === modelField
       })
-    },
-    loadAllAssociatedItems(){
-      this.target_models.forEach(tModel=>{
-        let query = this.createQuery(tModel);
-        axios.post( this.$baseUrl(),{
-          query: query,
-          variables:{id: this[ this.model.toLowerCase() ].id},
-          headers: {
-            'authorization': \`Bearer \${this.$getAuthToken()}\`,
-            'Accept': 'application/graphql'}
-        }).then(res=>{
-          this[ this.model.toLowerCase() ][ \`\${inflection.pluralize(tModel.model.toLowerCase())}Filter\` ]=
-          res.data.data[\`readOne\${inflection.capitalize(this.model)}\`][\`\${inflection.pluralize(tModel.model.toLowerCase())}Filter\`];
-        });
-      })
-    },
-    createQuery(tModel){
-      return \` query
-        readOne\${inflection.capitalize(this.model)}($id:ID!){
-          readOne\${inflection.capitalize(this.model)}(id:$id ){
-            \${inflection.pluralize(tModel.model.toLowerCase())}Filter{
-              id \${tModel.label} \${tModel.sublabel}
-            }
-          }
-        }
-      \`
     }
   },
 	mounted: function() {
@@ -1354,9 +1286,6 @@ export default {
     })
 	},
   created(){
-    if(this[this.model.toLowerCase()].id!==undefined){
-      this.loadAllAssociatedItems();
-    }
   }
 }
 </script>
@@ -1734,12 +1663,20 @@ module.exports.IndividualForm = `
     <div id="individual-transcript_counts-div" class="form-group">
       <label>transcript_counts</label>
       <has-many-form-element
-        :associatedElements.sync="individual.transcript_countsFilter"
         :searchUrl="this.$baseUrl()"
+        :idSelected="individual.id"
+        :countQuery="individual.countFilteredTranscript_counts"
+        :mode="mode"
+        :addItems.sync="individual.addTranscript_counts"
         label="gene"
         subLabel ="variable"
         valueKey="id"
+        model="Individual"
         targetModel = "Transcript_count"
+        removeName="removeTranscript_counts"
+        addName="addTranscript_counts"
+        query="readOneIndividual"
+        subQuery="transcript_countsFilter"
         >
       </has-many-form-element>
     </div>
@@ -1755,7 +1692,7 @@ import inflection from 'inflection'
 import axios from 'axios'
 
 export default {
-  props: [ 'individual', 'errors' ],
+  props: [ 'individual', 'errors', 'mode' ],
   data(){
     return{
       target_models: [ {
@@ -1774,32 +1711,6 @@ export default {
       return this.errors.find(function (el) {
         return el.path === modelField
       })
-    },
-    loadAllAssociatedItems(){
-      this.target_models.forEach(tModel=>{
-        let query = this.createQuery(tModel);
-        axios.post( this.$baseUrl(),{
-          query: query,
-          variables:{id: this[ this.model.toLowerCase() ].id},
-          headers: {
-            'authorization': \`Bearer \${this.$getAuthToken()}\`,
-            'Accept': 'application/graphql'}
-        }).then(res=>{
-          this[ this.model.toLowerCase() ][ \`\${inflection.pluralize(tModel.model.toLowerCase())}Filter\` ]=
-          res.data.data[\`readOne\${inflection.capitalize(this.model)}\`][\`\${inflection.pluralize(tModel.model.toLowerCase())}Filter\`];
-        });
-      })
-    },
-    createQuery(tModel){
-      return \` query
-        readOne\${inflection.capitalize(this.model)}($id:ID!){
-          readOne\${inflection.capitalize(this.model)}(id:$id ){
-            \${inflection.pluralize(tModel.model.toLowerCase())}Filter{
-              id \${tModel.label} \${tModel.sublabel}
-            }
-          }
-        }
-      \`
     }
   },
 	mounted: function() {
@@ -1812,9 +1723,6 @@ export default {
     })
 	},
   created(){
-    if(this[ this.model.toLowerCase() ].id!==undefined){
-      this.loadAllAssociatedItems();
-    }
   }
 }
 </script>
@@ -1906,7 +1814,7 @@ import inflection from 'inflection'
 import axios from 'axios'
 
 export default {
-  props: [ 'transcript_count', 'errors' ],
+  props: [ 'transcript_count', 'errors', 'mode' ],
   data(){
     return{
       target_models: [
@@ -1932,32 +1840,6 @@ export default {
       return this.errors.find(function (el) {
         return el.path === modelField
       })
-    },
-    loadAllAssociatedItems(){
-      this.target_models.forEach(tModel=>{
-        let query = this.createQuery(tModel);
-        axios.post( this.$baseUrl(),{
-          query: query,
-          variables:{id: this[ this.model.toLowerCase() ].id},
-          headers: {
-            'authorization': \`Bearer \${this.$getAuthToken()}\`,
-            'Accept': 'application/graphql'}
-        }).then(res=>{
-          this[ this.model.toLowerCase() ][ \`\${inflection.pluralize(tModel.model.toLowerCase())}Filter\` ]=
-          res.data.data[\`readOne\${inflection.capitalize(this.model)}\`][\`\${inflection.pluralize(tModel.model.toLowerCase())}Filter\`];
-        });
-      })
-    },
-    createQuery(tModel){
-      return \` query
-        readOne\${inflection.capitalize(this.model)}($id:ID!){
-          readOne\${inflection.capitalize(this.model)}(id:$id ){
-            \${inflection.pluralize(tModel.model.toLowerCase())}Filter{
-              id \${tModel.label} \${tModel.sublabel}
-            }
-          }
-        }
-      \`
     }
   },
 	mounted: function() {
@@ -1970,9 +1852,6 @@ export default {
     })
 	},
   created(){
-    if(this[this.model.toLowerCase()].id!==undefined){
-      this.loadAllAssociatedItems();
-    }
   }
 }
 </script>
@@ -2194,4 +2073,146 @@ methods: {
 `
 module.exports.PersonEdit = `
 
+`
+
+module.exports.PersonForm = `
+<template>
+  <div id="person-form-elemns-div">
+
+  <input type="hidden" v-model="person.id"/>
+
+
+    <div id="person-firstName-div" class="form-group">
+            <label>firstName</label>
+
+  <input type="text" v-model="person.firstName" class="form-control"/>
+
+
+      <div id="person-firstName-err" v-if="validationError('firstName')" class="alert alert-danger">
+        {{validationError('firstName').message}}
+      </div>
+    </div>
+
+
+    <div id="person-lastName-div" class="form-group">
+            <label>lastName</label>
+
+  <input type="text" v-model="person.lastName" class="form-control"/>
+
+
+      <div id="person-lastName-err" v-if="validationError('lastName')" class="alert alert-danger">
+        {{validationError('lastName').message}}
+      </div>
+    </div>
+
+
+    <div id="person-email-div" class="form-group">
+            <label>email</label>
+
+  <input type="text" v-model="person.email" class="form-control"/>
+
+
+      <div id="person-email-err" v-if="validationError('email')" class="alert alert-danger">
+        {{validationError('email').message}}
+      </div>
+    </div>
+
+
+    <div id="person-dogs-div" class="form-group">
+      <label>dogs</label>
+      <has-many-form-element
+        :searchUrl="this.$baseUrl()"
+        :idSelected="person.id"
+        :countQuery="person.countFilteredDogs"
+        :mode="mode"
+        :addItems.sync="person.addDogs"
+        label="name"
+                        valueKey="id"
+        model="Person"
+        targetModel = "Dog"
+        removeName="removeDogs"
+        addName="addDogs"
+        query="readOnePerson"
+        subQuery="dogsFilter"
+        >
+      </has-many-form-element>
+    </div>
+
+
+    <div id="person-books-div" class="form-group">
+      <label>books</label>
+      <has-many-form-element
+        :searchUrl="this.$baseUrl()"
+        :idSelected="person.id"
+        :countQuery="person.countFilteredBooks"
+        :mode="mode"
+        :addItems.sync="person.addBooks"
+        label="title"
+                        valueKey="id"
+        model="Person"
+        targetModel = "Book"
+        removeName="removeBooks"
+        addName="addBooks"
+        query="readOnePerson"
+        subQuery="booksFilter"
+        >
+      </has-many-form-element>
+    </div>
+
+
+
+  </div>
+</template>
+
+<script>
+import Vue from 'vue'
+
+
+import hasManyFormElemn from './hasManyFormElemn.vue'
+
+Vue.component('has-many-form-element', hasManyFormElemn)
+import inflection from 'inflection'
+import axios from 'axios'
+
+export default {
+  props: [ 'person', 'errors', 'mode' ],
+  data(){
+    return{
+      target_models: [
+                     {
+            model:'Dog',
+            label: 'name',
+            sublabel: ''
+        },                      {
+            model:'Book',
+            label: 'title',
+            sublabel: ''
+        }              ],
+      model: 'person'
+    }
+  },
+  computed: {
+    },
+  methods: {
+    validationError(modelField) {
+      if (this.errors == null) return false;
+      return this.errors.find(function (el) {
+        return el.path === modelField
+      })
+    }
+  },
+  mounted: function() {
+    let el = this;
+    $(document).ready(function(){
+      $('.datepicker').datepicker({
+        format: el.$defaultDateFormat(),
+        dateFormat: el.$defaultDateFormat()
+      })
+    })
+  },
+  created(){
+
+  }
+}
+</script>
 `
