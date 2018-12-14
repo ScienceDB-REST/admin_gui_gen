@@ -5,7 +5,7 @@
       <div v-if="<%- nameLc -%>" class="content">
         <form id="<%- nameLc -%>-form" v-on:submit.prevent="onSubmit">
 
-          <<%- nameLc -%>-form-elemns v-bind:errors="errors" v-bind:<%- nameLc -%>="<%- nameLc -%>"></<%- nameLc -%>-form-elemns>
+          <<%- nameLc -%>-form-elemns mode="edit" v-bind:errors="errors" v-bind:<%- nameLc -%>="<%- nameLc -%>"></<%- nameLc -%>-form-elemns>
 
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
@@ -19,6 +19,7 @@ import Vue from 'vue'
 import axios from 'axios'
 import <%- name -%>FormElemns from './<%- name -%>FormElemns.vue'
 import queries from '../requests/<%- nameLc -%>'
+import Queries from '../requests/index'
 
 Vue.component('<%- nameLc -%>-form-elemns', <%- name -%>FormElemns)
 
@@ -54,7 +55,7 @@ export default {
       var t = this;
       var url = this.$baseUrl()
       this.getAssociationsIds();
-      queries.update<%-nameCp-%>({url:url, variables:t.<%-nameLc-%>, token: t.$getAuthToken()})
+      Queries.<%-nameCp-%>.update({url:url, variables:t.<%-nameLc-%>, token: t.$getAuthToken()})
       .then(function (response) {
         t.$router.push('/<%- namePlLc -%>')
       }).catch( function (res) {
@@ -75,9 +76,6 @@ export default {
     },
 
     getAssociationsIds(){
-      <%for( i=0; i<hasManysArr.length; i++ ){-%>
-          this.<%- nameLc -%>.<%-hasManysArr[i].relationName%>Filter = this.getOnlyIds(this.<%- nameLc -%>.<%-hasManysArr[i].relationName%>Filter);
-        <%}-%>
     }
   }
 }

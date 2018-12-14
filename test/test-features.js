@@ -187,14 +187,14 @@ describe('VueTable GraphQl Query', function(){
         expect(created_editForm).to.be.equal(test_editForm);
     });
 
-    // let modelsObjBook = funks.fillOptionsForViews(models.person) ;
-    //
-    // it('BookEditForm - edit prop',async function(){
-    //    let file = await funks.renderTemplate('editForm',modelsObjBook);
-    //     let created_editForm = file.replace(/\s/g, '');
-    //     let test_editForm = testData.PersonEdit.replace(/\s/g, '');
-    //     expect(created_editForm).to.be.equal(test_editForm);
-    // });
+    let modelsObjPerson = funks.fillOptionsForViews(models.person) ;
+
+    it('PersonEditForm  edit prop - person',async function(){
+       let file = await funks.renderTemplate('editForm',modelsObjPerson);
+        let created_editForm = file.replace(/\s/g, '');
+        let test_editForm = testData.PersonEdit.replace(/\s/g, '');
+        expect(created_editForm).to.be.equal(test_editForm);
+    });
 
   });
 
