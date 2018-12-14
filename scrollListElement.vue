@@ -2,14 +2,23 @@
   <div id="scroll-form-div">
 
     <virtual-list class="list"
-        :size="50"
+        :size="40"
         :remain="2"
         :tobottom="toBottom"
     >
         <div class="item" v-for="(udf, index) of items" :key="index">
+          <i v-if="mode=='edit'" v-on:click="onRemove(udf)" class="delete icon"></i>
           {{ udf[label]}} <span v-if="subLabel!==''"> {{ udf[subLabel]}} </span>
         </div>
+
+        <div v-if="mode=='create'" class="item" v-for="(udf, index) of displayItems" :key="index">
+          <i  v-on:click="onRemove(udf)" class="delete icon"></i>
+          {{ udf[label]}} <span v-if="subLabel!==''"> {{ udf[subLabel]}} </span>
+        </div>
+
     </virtual-list>
+
+
 
   </div>
 </template>
@@ -28,13 +37,27 @@ export default {
       items: []
     }
   },
-  props: ['url','idSelected', 'query' ,'subQuery', 'label', 'subLabel','countQuery'],
+  props: {
+    url: String,
+    idSelected: String,
+    query: String ,
+    subQuery: String,
+    label: String,
+    subLabel: String,
+    countQuery: Number,
+    mode: String,
+    displayItems: Array
+  },
   components: {
     'virtual-list' : virtualList
   },
   methods: {
     toBottom(){
-      this.getNextElements();
+      if(this.mode!=='create'){
+        this.getNextElements();
+      }else{
+        console.log("When creating, to BOTTOM do NOTHING");
+      }
     },
 
     getNextElements(){
@@ -51,6 +74,10 @@ export default {
         });
       }
     },
+    onRemove(item){
+      //console.log("Sending to remove item: ", item)
+      this.$emit('remove-element', item.id)
+    },
 
     checkAndSetLimits(){
       if(this.offset < this.countQuery){
@@ -61,21 +88,27 @@ export default {
     }
   },
   mounted: function(){
+
       },
   created(){
+    //console.log("CATCHING EDIT: ",this.edit);
     this.data_query =
     `query ${this.query}($id: ID!, $offset:Int, $limit:Int) {
       ${this.query}(id:$id){ ${this.subQuery}(pagination:{limit: $limit offset:$offset }){ id ${this.label} ${this.subLabel} } } }`;
 
+      //console.log("FROM SCROLL MODE: ", this.mode);
     //get initial elements
-    this.getNextElements();
+    if(this.mode!=='create'){
+      this.getNextElements();
+    }
+
   }
 }
 </script>
 <style>
     .item {
-        height: 50px;
-        line-height: 50px;
+        height: 40px;
+        line-height: 40px;
         padding-left: 20px;
         border-bottom: 1px solid #eee;
         background: white;
