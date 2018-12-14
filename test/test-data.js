@@ -1308,7 +1308,7 @@ export default {
 
   readOnePerson : function({url, variables, token}){
     let query = \`query readOnePerson($id:ID!){
-      readOnePerson(id:$id){id  firstName   lastName   email  }
+      readOnePerson(id:$id){id  firstName   lastName   email countFilteredDogs countFilteredBooks   }
     }\`
     return requestGraphql({url, query, variables, token});
   },
@@ -1877,7 +1877,7 @@ export default {
   readOneBook : function({url, variables, token}){
     let query = \`query readOneBook($id:ID!){
       readOneBook(id:$id){id  title   genre         publisher{ name
-         }     }
+      }  countFilteredPeople   }
     }\`
     return requestGraphql({url, query, variables, token});
   },
