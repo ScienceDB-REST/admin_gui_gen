@@ -1,3 +1,6 @@
+# :no_entry: DEPRECATED 
+The restful approach for ScienceDB has been changed to graphql approach for new versions visit [this site](https://github.com/ScienceDb)
+
 # admin_gui_gen
 
 Code generator for VueJs implementing basic CRUD use cases.
